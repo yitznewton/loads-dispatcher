@@ -3,10 +3,11 @@
 
 <div>Starting location</div>
 <%= @origin_location %>
-<div>Starting date</div>
-<%= @origin_date %>
 
 <%= form_with method: :post do |form| %>
+  <div>Starting date</div>
+  <%= form.date_field :origin_date, value: origin_date || Date.today %>
+
   <label>DAT token
     <%= form.text_field :dat_token, value: params[:dat_token], required: true %>
     <%= form.submit 'Load' %>

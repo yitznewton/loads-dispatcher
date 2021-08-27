@@ -1,14 +1,33 @@
-<% if true || @loads.present? %>
+<% if @loads.present? %>
   <table>
     <thead>
       <tr>
-        <th>foo</th>
+        <th colspan="2">Pickup</th>
+        <th colspan="2">Dropoff</th>
+        <th>Weight</th>
+        <th>Distance</th>
+        <th>Notes</th>
+        <th colspan="2">Broker</th>
+        <th>Reference #</th>
+        <th>Blob</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>bar</td>
-      </tr>
+      <% @loads.each do |l| %>
+        <tr>
+          <td><%= l.pickup_date.strftime('%Y-%m-%d %H:%M') %></td>
+          <td><%= l.pickup_location %></td>
+          <td><%= l.dropoff_date.strftime('%Y-%m-%d') %></td>
+          <td><%= l.dropoff_location %></td>
+          <td><%= l.weight %></td>
+          <td><%= l.distance %></td>
+          <td><%= l.notes %></td>
+          <td><%= l.broker %></td>
+          <td><%= l.broker_phone %></td>
+          <td><%= l.reference_number %></td>
+<!--          <td><%#= l.original_data.to_json %></td>-->
+        </tr>
+      <% end %>
     </tbody>
   </table>
 <% end %>

@@ -13,14 +13,17 @@ class SearchLoads
     url = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'
     City.all.map { |destination_city|
       cache_key = "tql/#{origin_date.to_s}/#{origin_location.id}/#{destination_city.id}"
-      Rails.cache.fetch(cache_key, expires_in: 60.minutes) do
+
+      response_body = Rails.cache.fetch(cache_key, expires_in: 60.minutes) do
         response = Faraday.post(
           url,
           request_payload(pickup_location: origin_location, pickup_date: origin_date, dropoff_location: destination_city),
           REQUEST_HEADERS
         )
-        JSON.parse(response.body).fetch('PostedLoads').map { |l| clean(l) }.select { |l| valid?(l) }
+        JSON.parse(response.body)
       end
+
+      response_body.fetch('PostedLoads').map { |l| clean(l) }.select { |l| valid?(l) }
     }.flatten
   end
 
@@ -31,14 +34,16 @@ class SearchLoads
       pickup_location: load.fetch('Origin').slice('City', 'StateCode').values.join(', '),
       dropoff_location: load.fetch('Destination').slice('City', 'StateCode').values.join(', '),
       weight: load.fetch('Weight'),
-      distance: load.fetch('Miles'),
+      distance: load.fetch('Miles').nonzero?,
       notes: load.fetch('Notes'),
+      reference_number: load.fetch('PostIdReferenceNumber'),
+      broker: 'TQL (direct)',
+      broker_phone: '800-580-3101 option 8',
       original_data: load
     )
   end
 
   def self.valid?(load)
-    binding.pry
     return false if load.weight == 0
 
     true
