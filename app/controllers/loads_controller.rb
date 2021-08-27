@@ -6,5 +6,6 @@ class LoadsController < ApplicationController
       origin_location: @origin_location,
       origin_date: @origin_date
     )
+    binding.pry
   end
 end
