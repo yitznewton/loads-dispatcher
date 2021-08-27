@@ -3,9 +3,10 @@ class LoadsController < ApplicationController
     @origin_location = City.first
 
     if valid_to_search?
-      @loads = SearchLoads.call(
+      @loads = TruckersEdgeSearchLoads.call(
         origin_location: @origin_location,
-        origin_date: origin_date
+        origin_date: origin_date,
+        auth_token: params[:dat_auth_token]
       ).sort_by { |l| l.pickup_date }
     end
   end

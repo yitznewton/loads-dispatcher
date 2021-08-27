@@ -9,7 +9,7 @@
   <%= form.date_field :origin_date, value: origin_date || Date.today %>
 
   <label>DAT token
-    <%= form.text_field :dat_token, value: params[:dat_token], required: true %>
+    <%= form.text_field :dat_auth_token, value: params[:dat_auth_token], required: true %>
     <%= form.submit 'Load' %>
   </label>
 <% end %>

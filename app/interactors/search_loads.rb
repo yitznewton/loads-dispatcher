@@ -45,10 +45,10 @@ class SearchLoads
   end
 
   def self.distance(load)
-    load.fetch('Miles').nonzero? || self.distance_from_google!(load.fetch('Origin'), load.fetch('Destination'))
+    load.fetch('Miles').nonzero? || self.distance_via_google!(load.fetch('Origin'), load.fetch('Destination'))
   end
 
-  def self.distance_from_google!(origin, destination)
+  def self.distance_via_google!(origin, destination)
     origin = origin.slice('City', 'StateCode').values.join(', ')
     destination = destination.slice('City', 'StateCode').values.join(', ')
     payload = Rails.cache.fetch("#{origin}/#{destination}") do
