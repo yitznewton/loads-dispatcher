@@ -8,6 +8,7 @@ class SearchLoads
   }.freeze
 
   TIME_TEMPLATE = '%m/%d/%Y %H:%M:%S'.freeze
+  METERS_TO_MILES = 0.00062137
 
   def self.call(origin_location:, origin_date:)
     url = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'
@@ -34,13 +35,30 @@ class SearchLoads
       pickup_location: load.fetch('Origin').slice('City', 'StateCode').values.join(', '),
       dropoff_location: load.fetch('Destination').slice('City', 'StateCode').values.join(', '),
       weight: load.fetch('Weight'),
-      distance: load.fetch('Miles').nonzero?,
+      distance: distance(load),
       notes: load.fetch('Notes'),
       reference_number: load.fetch('PostIdReferenceNumber'),
       broker: 'TQL (direct)',
       broker_phone: '800-580-3101 option 8',
       original_data: load
     )
+  end
+
+  def self.distance(load)
+    load.fetch('Miles').nonzero? || self.distance_from_google!(load.fetch('Origin'), load.fetch('Destination'))
+  end
+
+  def self.distance_from_google!(origin, destination)
+    origin = origin.slice('City', 'StateCode').values.join(', ')
+    destination = destination.slice('City', 'StateCode').values.join(', ')
+    payload = Rails.cache.fetch("#{origin}/#{destination}") do
+      url = 'https://maps.googleapis.com/maps/api/distancematrix/json'
+      params = {destinations: destination, origins: origin, units: 'imperial', key: ENV['GOOGLE_MAPS_API_KEY']}
+      response = Faraday.get(url, params)
+      JSON.parse(response.body)
+    end
+
+    (payload['rows'].first['elements'].first['distance']['value'] * METERS_TO_MILES).to_i
   end
 
   def self.valid?(load)
