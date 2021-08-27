@@ -1,0 +1,16 @@
+<h1>Loads#index</h1>
+<p>Find me in app/views/loads/index.html.erb</p>
+
+<div>Starting location</div>
+<%= @origin_location %>
+<div>Starting date</div>
+<%= @origin_date %>
+
+<%= form_with method: :post do |form| %>
+  <label>DAT token
+    <%= form.text_field :dat_token, value: params[:dat_token], required: true %>
+    <%= form.submit 'Load' %>
+  </label>
+<% end %>
+
+<%= render 'table' %>
