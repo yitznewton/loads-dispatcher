@@ -1,6 +1,28 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+Layout/BlockEndNewline:
+  Exclude:
+    - spec/**/*_spec.rb
+
+Layout/MultilineBlockLayout:
+  Exclude:
+    - spec/**/*_spec.rb
+
 Layout/SpaceInsideBlockBraces:
   Exclude:
     - spec/**/*_spec.rb
+
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*_spec.rb
+
+Style/BlockDelimiters:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
@@ -8,14 +30,23 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/Lambda:
+  Enabled: false
+
 Style/NumericLiterals:
   Exclude:
     - db/seeds.rb
+    - spec/**/*_spec.rb
 
 AllCops:
   NewCops: enable
 
   Exclude:
+    - bin/bundle
+    - bin/webpack
+    - bin/webpack-dev-server
+    - bin/yarn
+    - db/migrate/*.rb
     - config/puma.rb
     - config/spring.rb
     - db/schema.rb

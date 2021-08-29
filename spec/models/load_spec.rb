@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Load do
-  subject { described_class.new(complete_attributes) }
+  subject(:load) { described_class.new(complete_attributes) }
 
   let(:complete_attributes) { base_attributes.merge(attributes) }
   let(:attributes) {{}}
@@ -11,7 +11,7 @@ describe Load do
       let(:attributes) {{ rate: 9000 }}
 
       specify do
-        expect(subject).not_to be_valid
+        expect(load).not_to be_valid
       end
     end
 
@@ -19,7 +19,7 @@ describe Load do
       let(:attributes) {{ notes: 'No box trucks!!' }}
 
       specify do
-        expect(subject).not_to be_valid
+        expect(load).not_to be_valid
       end
     end
 
@@ -27,7 +27,7 @@ describe Load do
       let(:attributes) {{ pickup_location: {city: 'A', state: 'NY', county: 'Queens'} }}
 
       specify do
-        expect(subject).not_to be_valid
+        expect(load).not_to be_valid
       end
     end
 
@@ -35,14 +35,14 @@ describe Load do
       let(:attributes) {{ dropoff_location: {city: 'A', state: 'NY', county: 'Suffolk'} }}
 
       specify do
-        expect(subject).not_to be_valid
+        expect(load).not_to be_valid
       end
     end
   end
 
   def base_attributes
     {
-      pickup_date: Time.now,
+      pickup_date: Time.current,
       pickup_location: {city: 'Passaic', state: 'NJ', county: 'Passaic'},
       dropoff_location: {city: 'West Hartford', state: 'CT', county: 'Hartford'},
       weight: 5000,

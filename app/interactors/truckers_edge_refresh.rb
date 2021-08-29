@@ -55,7 +55,6 @@ class TruckersEdgeRefresh
   end
 end
 
-
 # DETAIL:
 # commodity
 # whenPickup
