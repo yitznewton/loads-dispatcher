@@ -18,3 +18,9 @@ City.create!([
                  radius: 100
                }
              ])
+
+LoadBoard.create!([
+                    {
+                      name: 'Truckers Edge'
+                    }
+                  ])

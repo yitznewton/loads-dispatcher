@@ -1,6 +1,8 @@
 class Load < ApplicationRecord
   MINIMUM_OFFERED_RATE = 100
 
+  belongs_to :broker_company
+
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :distance, presence: true, numericality: { greater_than: 0 }
   validates :pickup_date, presence: true

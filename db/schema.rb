@@ -10,7 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_27_190334) do
+ActiveRecord::Schema.define(version: 2021_08_29_030533) do
+
+  create_table "broker_companies", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "broker_company_identifiers", force: :cascade do |t|
+    t.string "identifier"
+    t.integer "broker_company_id", null: false
+    t.integer "load_board_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["broker_company_id"], name: "index_broker_company_identifiers_on_broker_company_id"
+    t.index ["load_board_id"], name: "index_broker_company_identifiers_on_load_board_id"
+  end
 
   create_table "cities", force: :cascade do |t|
     t.string "city", null: false
@@ -20,6 +36,12 @@ ActiveRecord::Schema.define(version: 2021_08_27_190334) do
     t.float "latitude", null: false
     t.float "longitude", null: false
     t.string "county", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "load_boards", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -37,11 +59,15 @@ ActiveRecord::Schema.define(version: 2021_08_27_190334) do
     t.datetime "dropoff_date"
     t.json "pickup_location", null: false
     t.json "dropoff_location", null: false
-    t.string "broker_company", null: false
     t.text "notes"
     t.json "other"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "broker_company_id", null: false
+    t.index ["broker_company_id"], name: "index_loads_on_broker_company_id"
   end
 
+  add_foreign_key "broker_company_identifiers", "broker_companies"
+  add_foreign_key "broker_company_identifiers", "load_boards"
+  add_foreign_key "loads", "broker_companies"
 end

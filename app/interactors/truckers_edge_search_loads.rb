@@ -33,6 +33,10 @@ class TruckersEdgeSearchLoads
   end
 
   def self.create(load)
+    broker_company_identifier = BrokerCompanyIdentifier
+                          .create_with(broker_company: BrokerCompany.new(name: load['companyName']))
+                          .find_or_create_by(identifier: load['combinedOfficeId'], load_board: LoadBoard.truckers_edge)
+
     load = Load.new(
       weight: load['weight'],
       length: load['length'],
@@ -45,7 +49,7 @@ class TruckersEdgeSearchLoads
       pickup_location: load['origin'],
       pickup_date: load['pickupDate'].to_time,
       dropoff_location: load['destination'],
-      broker_company: load['companyName'],
+      broker_company: broker_company_identifier.broker_company,
       notes: load['comments']&.join('. '),
       other: load
     )
