@@ -69,15 +69,15 @@ class TruckersEdgeLoadFactory
   end
 
   def distance
-    return distance_from_google if load_data.fetch('isTripMilesAir')
+    return our_distance if load_data.fetch('isTripMilesAir')
 
-    load_data.fetch('tripMiles').nonzero? || distance_from_google
+    load_data.fetch('tripMiles').nonzero? || our_distance
   end
 
-  def distance_from_google
-    DistanceFromGoogle.call(
-      origin: Place.new(load_data.fetch('origin')).to_s,
-      destination: Place.new(load_data.fetch('destination')).to_s
-    )
+  def our_distance
+    PlacesDistance.for_places(
+      origin: Place.new(load_data.fetch('origin')),
+      destination: Place.new(load_data.fetch('destination'))
+    ).distance
   end
 end

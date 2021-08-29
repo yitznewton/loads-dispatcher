@@ -56,13 +56,13 @@ class TqlLoadFactory
   end
 
   def distance
-    load_data.fetch('Miles').nonzero? || distance_from_google
+    load_data.fetch('Miles').nonzero? || our_distance
   end
 
-  def distance_from_google
-    DistanceFromGoogle.call(
-      origin: Place.new(load_data.fetch('Origin')).to_s,
-      destination: Place.new(load_data.fetch('Destination')).to_s
-    )
+  def our_distance
+    PlacesDistance.for_places(
+      origin: Place.new(load_data.fetch('Origin')),
+      destination: Place.new(load_data.fetch('Destination'))
+    ).distance
   end
 end

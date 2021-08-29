@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_29_032530) do
+ActiveRecord::Schema.define(version: 2021_08_29_194314) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -76,6 +76,15 @@ ActiveRecord::Schema.define(version: 2021_08_29_032530) do
     t.integer "load_identifier_id", null: false
     t.index ["broker_company_id"], name: "index_loads_on_broker_company_id"
     t.index ["load_identifier_id"], name: "index_loads_on_load_identifier_id"
+  end
+
+  create_table "places_distances", force: :cascade do |t|
+    t.string "origin", null: false
+    t.string "destination", null: false
+    t.integer "distance", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["origin", "destination"], name: "index_places_distances_on_origin_and_destination", unique: true
   end
 
   add_foreign_key "broker_company_identifiers", "broker_companies"

@@ -21,6 +21,10 @@ class Place
     state == 'NY' && NYC_AND_LONG_ISLAND_COUNTIES.include?(county)
   end
 
+  def ==(other)
+    to_s == other.to_s
+  end
+
   def to_s
     "#{city}, #{state}"
   end

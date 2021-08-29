@@ -74,7 +74,6 @@ describe TqlLoadFactory do
     end
   end
 
-
   def base_load_data
     {
       'PostIdReferenceNumber' => 'ABC123',
