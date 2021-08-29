@@ -19,12 +19,6 @@ City.create!([
                }
              ])
 
-BrokerCompany.create!([
-                        {
-                          name: 'TQL'
-                        }
-                      ])
-
 LoadBoard.create!([
                     {
                       name: 'Truckers Edge'
@@ -33,3 +27,8 @@ LoadBoard.create!([
                       name: 'TQL'
                     }
                   ])
+
+BrokerCompanyIdentifier.create!([
+                                  load_board: LoadBoard.tql,
+                                  broker_company: BrokerCompany.create!(name: 'TQL')
+                                ])
