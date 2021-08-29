@@ -8,9 +8,10 @@ class TqlLoadFactory < BaseLoadFactory
       identifier: load_data.fetch('PostIdReferenceNumber'),
       load_board: LoadBoard.tql
     )
-
   end
 
+  # rubocop:todo Metrics/AbcSize
+  # rubocop:todo Metrics/MethodLength
   def parsed_attributes
     {
       weight: load_data.fetch('Weight'),
@@ -26,6 +27,8 @@ class TqlLoadFactory < BaseLoadFactory
       raw: load_data
     }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def broker_company
     @broker_company ||= BrokerCompanyIdentifier.find_by!(load_board: LoadBoard.tql).broker_company

@@ -1,5 +1,5 @@
 class Place
-  NYC_AND_LONG_ISLAND_COUNTIES = ['New York', 'Queens', 'Kings', 'Richmond', 'Bronx', 'Nassau', 'Suffolk']
+  NYC_AND_LONG_ISLAND_COUNTIES = ['New York', 'Queens', 'Kings', 'Richmond', 'Bronx', 'Nassau', 'Suffolk'].freeze
 
   def initialize(place_data)
     @place_data = place_data

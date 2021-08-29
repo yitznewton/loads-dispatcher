@@ -36,7 +36,7 @@ describe TqlLoadFactory do
         'Miles' => 0
       }}
 
-      it 'is retrieved from Google using the expected place names' do
+      it 'is retrieved from Google using the expected place names' do  # rubocop:disable RSpec/MultipleExpectations
         expect(load.distance).to eq(123)
         expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
       end
@@ -53,7 +53,7 @@ describe TqlLoadFactory do
 
   context 'when called again' do
     context 'with valid data' do
-      it 'updates the existing record when called again' do
+      it 'updates the existing record when called again' do  # rubocop:disable RSpec/MultipleExpectations
         described_class.call(complete_load_data.merge('Notes' => 'Bongo'))
         expect(load.notes).to eq('Bongo')
         expect(Load.count).to eq(1)

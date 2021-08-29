@@ -11,6 +11,9 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
     )
   end
 
+  # rubocop:todo Metrics/AbcSize
+  # rubocop:todo Metrics/CyclomaticComplexity
+  # rubocop:todo Metrics/MethodLength
   def parsed_attributes
     {
       weight: load_data['weight'],
@@ -29,6 +32,9 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
       raw: load_data
     }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
 
   def broker_company_identifier
     BrokerCompanyIdentifier

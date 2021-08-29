@@ -21,6 +21,16 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*_spec.rb
 
+Rails/Blank:
+  UnlessPresent: false
+
+RSpec/ExpectChange:
+  EnforcedStyle: block
+
+Style/BlockComments:
+  Exclude:
+    - spec/spec_helper.rb
+
 Style/BlockDelimiters:
   Enabled: false
 

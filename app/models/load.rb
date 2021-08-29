@@ -24,6 +24,8 @@ class Load < ApplicationRecord
     (rate + distance / 2) / distance if rate
   end
 
+  # rubocop:disable Style/GuardClause
+  # rubocop:disable Style/IfUnlessModifier
   def no_lowballs
     if rate_per_mile && rate_per_mile < MINIMUM_OFFERED_RATE
       errors.add(:no_lowballs, "Rate per mile needs to be higher than #{MINIMUM_OFFERED_RATE}")
@@ -40,8 +42,10 @@ class Load < ApplicationRecord
     places = [pickup_location, dropoff_location].compact
     return unless places.present?
 
-    if places.any? { |p| p.nyc_or_long_island? }
+    if places.any?(&:nyc_or_long_island?)
       errors.add(:no_nyc_long_island, 'Avoid NYC and Long Island')
     end
   end
+  # rubocop:enable Style/GuardClause
+  # rubocop:enable Style/IfUnlessModifier
 end

@@ -17,7 +17,7 @@ describe TruckersEdgeLoadFactory do
   end
 
   describe 'distance' do
-    context 'where given in surface miles' do
+    context 'when given in surface miles' do
       let(:load_data) {{
         'isTripMilesAir' => false,
         'tripMiles' => 100
@@ -28,25 +28,25 @@ describe TruckersEdgeLoadFactory do
       end
     end
 
-    context 'where given in air miles' do
+    context 'when given in air miles' do
       let(:load_data) {{
         'isTripMilesAir' => true,
         'tripMiles' => 100
       }}
 
-      it 'is retrieved from Google' do
+      it 'is retrieved from Google' do  # rubocop:disable RSpec/MultipleExpectations
         expect(load.distance).to eq(123)
         expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
       end
     end
 
-    context 'where missing' do
+    context 'when missing' do
       let(:load_data) {{
         'isTripMilesAir' => false,
         'tripMiles' => 0
       }}
 
-      it 'is retrieved from Google' do
+      it 'is retrieved from Google' do  # rubocop:disable RSpec/MultipleExpectations
         expect(load.distance).to eq(123)
         expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
       end
@@ -92,9 +92,10 @@ describe TruckersEdgeLoadFactory do
   end
 
   it "doesn't create duplicates when called again" do
-    expect { described_class.call(complete_load_data) }.not_to change { Load.count }
+    expect { described_class.call(complete_load_data) }.not_to(change { Load.count })
   end
 
+  # rubocop:disable Metrics/MethodLength
   def base_load_data
     {
       'matchId' => 'ABC123',
@@ -112,4 +113,5 @@ describe TruckersEdgeLoadFactory do
       'contactName' => {'first' => 'Joe', 'last' => 'Bobkin'}
     }
   end
+  # rubocop:enable Metrics/MethodLength
 end
