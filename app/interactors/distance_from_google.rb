@@ -2,6 +2,10 @@ class DistanceFromGoogle
   METERS_TO_MILES = 0.00062137
 
   def self.call(origin:, destination:)
+    raise "Don't call me" if Rails.env.test?
+
+    Rails.logger.debug(msg: 'Google location needed', origin: origin, destination: destination)
+
     payload = Rails.cache.fetch("distance_from_google/#{origin}/#{destination}") do
       Rails.logger.debug(msg: 'Requesting location from Google', origin: origin, destination: destination)
 

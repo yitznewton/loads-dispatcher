@@ -8,11 +8,13 @@ describe TruckersEdgeLoadFactory do
   }
 
   let(:load_data) {{}}
+  let(:before_call) { -> {} }
 
   before do
     allow(DistanceFromGoogle).to receive(:call).and_return(123)
     LoadBoard.create!(name: 'Truckers Edge')
 
+    before_call.call
     described_class.call(complete_load_data)
   end
 
@@ -34,6 +36,11 @@ describe TruckersEdgeLoadFactory do
         'tripMiles' => 100
       }}
 
+      let(:before_call) { -> {
+        expect(DistanceFromGoogle).to receive(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
+                                                    .and_return(123)
+      } }
+
       it 'is retrieved from Google' do
         expect(subject.distance).to eq(123)
       end
@@ -44,6 +51,11 @@ describe TruckersEdgeLoadFactory do
         'isTripMilesAir' => false,
         'tripMiles' => 0
       }}
+
+      let(:before_call) { -> {
+        expect(DistanceFromGoogle).to receive(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
+                                                    .and_return(123)
+      } }
 
       it 'is retrieved from Google' do
         expect(subject.distance).to eq(123)
@@ -97,8 +109,8 @@ describe TruckersEdgeLoadFactory do
     {
       'matchId' => 'ABC123',
       'weight' => 4567,
-      'origin' => {},
-      'destination' => {},
+      'origin' => {'city' => 'Passaic', 'state' => 'NJ'},
+      'destination' => {'city' => 'West Hartford', 'state' => 'CT'},
       'rate' => 600,
       'pickupDate' => '2021-08-29T00:00:00.000Z',
       'isTripMilesAir' => false,
