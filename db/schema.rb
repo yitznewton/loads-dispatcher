@@ -30,10 +30,11 @@ ActiveRecord::Schema.define(version: 2021_08_27_190334) do
     t.integer "distance", null: false
     t.integer "rate"
     t.string "contact_name"
-    t.json "contact_phone"
-    t.string "reference_number", null: false
-    t.time "pickup_date", null: false
-    t.time "dropoff_date"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "reference_number"
+    t.datetime "pickup_date", null: false
+    t.datetime "dropoff_date"
     t.json "pickup_location", null: false
     t.json "dropoff_location", null: false
     t.string "broker_company", null: false

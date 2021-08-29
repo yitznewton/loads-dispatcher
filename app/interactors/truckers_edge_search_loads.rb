@@ -10,6 +10,8 @@ class TruckersEdgeSearchLoads
   }.freeze
 
   # TIME_TEMPLATE = '%m/%d/%Y %H:%M:%S'.freeze
+  CALLBACK_TYPE_PHONE = 'Phone'.freeze
+  CALLBACK_TYPE_EMAIL = 'Email'.freeze
   METERS_TO_MILES = 0.00062137
 
   def self.call(origin_location:, origin_date:, auth_token:)
@@ -23,32 +25,46 @@ class TruckersEdgeSearchLoads
           request_payload(pickup_location: origin_location, pickup_date: origin_date, dropoff_location: destination_city),
           BASE_REQUEST_HEADERS.merge('Authorization' => "Bearer #{auth_token}")
         )
-        JSON.parse(response.body).fetch('matchDetails')
+        JSON.parse(response.body)
       end
 
-      binding.pry
+      data.fetch('matchDetails').map { |l| create(l) }.compact
     }.flatten
   end
 
-  def self.build(load)
-    Load.new(
+  def self.create(load)
+    load = Load.new(
       weight: load['weight'],
       length: load['length'],
-      distance: 200,#distance(load),
-      rate: load['rate']&.*(100),
+      distance: distance(load),
+      rate: load['rate']&.*(100)&.nonzero?,
       contact_name: load['contactName']&.slice('first', 'last')&.values&.compact&.join(' '),
-      contact_phone: load['callback'],
+      contact_phone: phone(load['callback']),
+      contact_email: email(load['callback']),
       reference_number: load['postersReferenceId'],
       pickup_location: load['origin'],
+      pickup_date: load['pickupDate'].to_time,
       dropoff_location: load['destination'],
       broker_company: load['companyName'],
       notes: load['comments']&.join('. '),
       other: load
     )
+
+    load if load.save
+  end
+
+  def self.phone(callback)
+    callback.fetch('phone') if callback.fetch('type') == CALLBACK_TYPE_PHONE
+  end
+
+  def self.email(callback)
+    callback.fetch('email') if callback.fetch('type') == CALLBACK_TYPE_EMAIL
   end
 
   def self.distance(load)
-    return distance_from_google!(load.fetch('origin'), load.fetch('destination')) if load.fetch('isTripMilesAir')
+    if load.fetch('isTripMilesAir')
+      return distance_from_google!(load.fetch('origin'), load.fetch('destination'))
+    end
 
     load.fetch('tripMiles').nonzero? || distance_from_google!(load.fetch('origin'), load.fetch('destination'))
   end
@@ -62,7 +78,6 @@ class TruckersEdgeSearchLoads
       response = Faraday.get(url, params)
       JSON.parse(response.body)
     end
-    binding.pry
 
     (payload['rows'].first['elements'].first['distance']['value'] * METERS_TO_MILES).to_i
   end

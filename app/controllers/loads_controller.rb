@@ -3,6 +3,7 @@ class LoadsController < ApplicationController
     @origin_location = City.first
 
     if valid_to_search?
+      Load.delete_all
       @loads = TruckersEdgeSearchLoads.call(
         origin_location: @origin_location,
         origin_date: origin_date,
@@ -12,7 +13,8 @@ class LoadsController < ApplicationController
   end
 
   def origin_date
-    params[:origin_date]
+    # params[:origin_date]
+    Date.today
   end
   helper_method :origin_date
 

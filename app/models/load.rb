@@ -3,13 +3,17 @@ class Load < ApplicationRecord
 
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :distance, presence: true, numericality: { greater_than: 0 }
-  validates :reference_number, presence: true
+  validates :pickup_date, presence: true
 
   validate :no_lowballs
 
+  def rate_per_mile
+    (rate + distance / 2) / distance if rate
+  end
+
   def no_lowballs
-    if rate && rate > 0 && rate / distance < MINIMUM_OFFERED_RATE
-      errors.add(:no_lowballs, "Rate needs to be higher than #{MINIMUM_OFFERED_RATE}")
+    if rate_per_mile && rate_per_mile < MINIMUM_OFFERED_RATE
+      errors.add(:no_lowballs, "Rate per mile needs to be higher than #{MINIMUM_OFFERED_RATE}")
     end
   end
 end
