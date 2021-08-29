@@ -7,20 +7,20 @@ class TqlRefresh
     'tql-api-version' => '2.0'
   }.freeze
 
-  def self.call(origin_location:, origin_date:)
+  def self.call(origin_date:)
     url = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'
 
     Load.transaction do
       LoadBoard.tql.load_identifiers.delete_all
 
-      City.all.each do |destination_city|
-        cache_key = "tql/#{origin_date.to_s}/#{origin_location.id}/#{destination_city.id}"
+      City.routes.each do |(origin_city, destination_city)|
+        cache_key = "tql/#{origin_date.to_s}/#{origin_city.id}/#{destination_city.id}"
 
         data = begin
                  Rails.cache.fetch(cache_key, expires_in: 600.minutes) do
                    response = Faraday.post(
                      url,
-                     request_payload(pickup_location: origin_location, pickup_date: origin_date, dropoff_location: destination_city),
+                     request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
                      REQUEST_HEADERS
                    )
                    JSON.parse(response.body).tap do |data|

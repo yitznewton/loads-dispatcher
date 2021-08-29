@@ -1,16 +1,5 @@
-<h1>Loads#index</h1>
+<% content_for(:page_title, 'All loads') %>
 
-<div>Starting location</div>
-<%= @origin_location %>
-
-<%= form_with method: :post do |form| %>
-  <div>Starting date</div>
-  <%= form.date_field :origin_date, value: origin_date || Date.today %>
-
-  <label>DAT token
-    <%= form.text_field :dat_auth_token, value: params[:dat_auth_token], required: true %>
-    <%= form.submit 'Load' %>
-  </label>
-<% end %>
+<h1>All loads</h1>
 
 <%= render 'table' %>

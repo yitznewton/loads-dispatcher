@@ -30,7 +30,7 @@ class Load < ApplicationRecord
   end
 
   def no_box_truck_exclusion
-    if notes.downcase.include?('no box truck')
+    if notes.to_s.downcase.include?('no box truck')
       errors.add(:no_box_truck_exclusion, 'Box trucks excluded')
     end
   end

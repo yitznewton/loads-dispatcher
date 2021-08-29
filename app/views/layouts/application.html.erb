@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dispatcher</title>
+    <% page_title = yield(:page_title) %>
+    <% page_title = page_title.presence && "#{page_title} | " %>
+    <title><%= page_title %>Milton Morley Dispatcher</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>

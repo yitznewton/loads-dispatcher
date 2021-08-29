@@ -13,14 +13,18 @@ class TruckersEdgeLoadFactory
   attr_reader :load_data
 
   def call
-    load_identifier = LoadIdentifier.find_by(identifier: load_data.fetch('matchId'), load_board: LoadBoard.truckers_edge)
-    return if load_identifier
-
     Load.transaction do
-      load = Load.new(
+      load_identifier = LoadIdentifier.find_or_create_by!(
+        identifier: load_data.fetch('matchId'),
+        load_board: LoadBoard.truckers_edge
+      )
+
+      next if load_identifier.load
+
+      Load.create(
         weight: load_data['weight'],
         length: load_data['length'],
-        distance: distance(load_data),
+        distance: distance,
         rate: load_data['rate']&.*(100)&.nonzero?,
         contact_name: load_data['contactName']&.slice('first', 'last')&.values&.compact&.join(' '),
         contact_phone: phone(load_data['callback']),
@@ -31,12 +35,9 @@ class TruckersEdgeLoadFactory
         dropoff_location: load_data['destination'],
         broker_company: broker_company_identifier.broker_company,
         notes: load_data['comments']&.join('. '),
-        raw: load_data
+        raw: load_data,
+        load_identifier: load_identifier
       )
-
-      next unless load.save
-
-      LoadIdentifier.create(identifier: load_data.fetch('matchId'), load: load, load_board: LoadBoard.truckers_edge)
     end
   end
 

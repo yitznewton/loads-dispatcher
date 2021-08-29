@@ -9,20 +9,20 @@ class TruckersEdgeRefresh
     'User-Agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0'
   }.freeze
 
-  def self.call(origin_location:, origin_date:, auth_token:)
+  def self.call(origin_date:, auth_token:)
     url = 'https://freight.api.prod.dat.com/trucker/api/v2/freightMatching/search'
 
     Load.transaction do
-      LoadBoard.truckers_edge.loads.delete_all
+      LoadBoard.truckers_edge.load_identifiers.delete_all
 
-      City.all.each do |destination_city|
-        cache_key = "truckers_edge/#{origin_date.to_s}/#{origin_location.id}/#{destination_city.id}"
+      City.routes.each do |(origin_city, destination_city)|
+        cache_key = "truckers_edge/#{origin_date.to_s}/#{origin_city.id}/#{destination_city.id}"
 
         data = begin
                  Rails.cache.fetch(cache_key, expires_in: 600.minutes) do
                    response = Faraday.post(
                      url,
-                     request_payload(pickup_location: origin_location, pickup_date: origin_date, dropoff_location: destination_city),
+                     request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
                      BASE_REQUEST_HEADERS.merge('Authorization' => "Bearer #{auth_token}")
                    )
                    JSON.parse(response.body).tap do |data|
@@ -69,22 +69,3 @@ end
 # commodity
 # whenPickup
 # whenDropOff
-
-# SEARCH:
-# searchId and totalMatchCount (top level; the rest are under matchDetails)
-# matchId
-# weight
-# length
-# tripMiles
-# isTripMilesAir
-# rate
-# callback: phone, type
-# contactName: first, last
-# postersReferenceId
-# availability: earliest, latest
-# origin: city, state, latitude, longitude, county, type: minimalPoint
-# destination: "
-# companyName
-# equipmentType
-# equipmentTypeCode
-# pickupDate
