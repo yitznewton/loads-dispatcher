@@ -16,22 +16,13 @@ class TruckersEdgeRefresh
       LoadBoard.truckers_edge.load_identifiers.delete_all
 
       City.routes.each do |(origin_city, destination_city)|
-        cache_key = "truckers_edge/#{origin_date.to_s}/#{origin_city.id}/#{destination_city.id}"
-
-        data = begin
-                 Rails.cache.fetch(cache_key, expires_in: 600.minutes) do
-                   response = Faraday.post(
-                     url,
-                     request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
-                     BASE_REQUEST_HEADERS.merge('Authorization' => "Bearer #{auth_token}")
-                   )
-                   JSON.parse(response.body).tap do |data|
-                     raise BadTruckersEdgeResponse unless data.include?('matchDetails')
-                   end
-                 end
-               rescue BadTruckersEdgeResponse
-                 # don't cache it
-               end
+        response = Faraday.post(
+          url,
+          request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
+          BASE_REQUEST_HEADERS.merge('Authorization' => "Bearer #{auth_token}")
+        )
+        data = JSON.parse(response.body)
+        raise BadTruckersEdgeResponse unless data.include?('matchDetails')
 
         data.fetch('matchDetails').each { |l| TruckersEdgeLoadFactory.call(l) }
       end

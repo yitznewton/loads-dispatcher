@@ -14,22 +14,13 @@ class TqlRefresh
       LoadBoard.tql.load_identifiers.delete_all
 
       City.routes.each do |(origin_city, destination_city)|
-        cache_key = "tql/#{origin_date.to_s}/#{origin_city.id}/#{destination_city.id}"
-
-        data = begin
-                 Rails.cache.fetch(cache_key, expires_in: 600.minutes) do
-                   response = Faraday.post(
-                     url,
-                     request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
-                     REQUEST_HEADERS
-                   )
-                   JSON.parse(response.body).tap do |data|
-                     raise BadTqlResponse unless data.include?('PostedLoads')
-                   end
-                 end
-               rescue BadTqlResponse
-                 # don't cache it
-               end
+        response = Faraday.post(
+          url,
+          request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
+          REQUEST_HEADERS
+        )
+        data = JSON.parse(response.body)
+        raise BadTqlResponse unless data.include?('PostedLoads')
 
         data.fetch('PostedLoads').each { |l| TqlLoadFactory.call(l) }
       end

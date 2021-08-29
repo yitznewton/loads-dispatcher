@@ -9,9 +9,8 @@ class DistanceFromGoogle
     url = 'https://maps.googleapis.com/maps/api/distancematrix/json'
     params = {destinations: destination, origins: origin, units: 'imperial', key: ENV['GOOGLE_MAPS_API_KEY']}
     response = Faraday.get(url, params)
-    payload = JSON.parse(response.body).tap do |json|
-      raise BadGoogleDistanceResponse if json.include?('error_message')
-    end
+    payload = JSON.parse(response.body)
+    raise BadGoogleDistanceResponse if payload.include?('error_message')
 
     (payload['rows'].first['elements'].first['distance']['value'] * METERS_TO_MILES).to_i
   end
