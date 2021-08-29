@@ -10,6 +10,7 @@ class Load < ApplicationRecord
 
   validate :no_lowballs
   validate :no_box_truck_exclusion
+  validate :no_nyc_long_island
 
   def pickup_location
     Place.new(super)
@@ -32,6 +33,15 @@ class Load < ApplicationRecord
   def no_box_truck_exclusion
     if notes.to_s.downcase.include?('no box truck')
       errors.add(:no_box_truck_exclusion, 'Box trucks excluded')
+    end
+  end
+
+  def no_nyc_long_island
+    places = [pickup_location, dropoff_location].compact
+    return unless places.present?
+
+    if places.any? { |p| p.nyc_or_long_island? }
+      errors.add(:no_nyc_long_island, 'Avoid NYC and Long Island')
     end
   end
 end
