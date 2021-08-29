@@ -1,4 +1,11 @@
+Layout/SpaceInsideBlockBraces:
+  Exclude:
+    - spec/**/*_spec.rb
+
 Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/NumericLiterals:

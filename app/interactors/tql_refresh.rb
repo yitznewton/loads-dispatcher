@@ -45,7 +45,7 @@ class TqlRefresh
       SaveSearch: true,
       TrailerSizeId: 3,
       TrailerTypeId: 2,
-      Weight: "11000"
+      Weight: '11000'
     }.to_json
   end
 end
