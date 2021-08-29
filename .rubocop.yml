@@ -1,0 +1,14 @@
+Style/Documentation:
+  Enabled: false
+
+Style/NumericLiterals:
+  Exclude:
+    - db/seeds.rb
+
+AllCops:
+  NewCops: enable
+
+  Exclude:
+    - config/puma.rb
+    - config/spring.rb
+    - db/schema.rb
