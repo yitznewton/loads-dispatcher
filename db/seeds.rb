@@ -15,7 +15,7 @@ City.create!([
                  latitude: 41.778160,
                  longitude: -72.520670,
                  county: 'Hartford',
-                 radius: 100
+                 radius: 125
                }
              ])
 
