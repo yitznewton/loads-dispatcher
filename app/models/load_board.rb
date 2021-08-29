@@ -2,7 +2,7 @@ class LoadBoard < ApplicationRecord
   NAME_TQL = 'TQL'.freeze
   NAME_TRUCKERS_EDGE = 'Truckers Edge'.freeze
 
-  has_many :load_identifiers
+  has_many :load_identifiers, dependent: :delete_all
   has_many :loads, through: :load_identifiers
 
   def self.tql

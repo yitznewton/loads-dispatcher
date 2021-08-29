@@ -49,11 +49,9 @@ ActiveRecord::Schema.define(version: 2021_08_29_032530) do
   create_table "load_identifiers", force: :cascade do |t|
     t.string "identifier"
     t.integer "load_board_id", null: false
-    t.integer "load_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["load_board_id"], name: "index_load_identifiers_on_load_board_id"
-    t.index ["load_id"], name: "index_load_identifiers_on_load_id"
   end
 
   create_table "loads", force: :cascade do |t|
@@ -69,17 +67,20 @@ ActiveRecord::Schema.define(version: 2021_08_29_032530) do
     t.datetime "dropoff_date"
     t.json "pickup_location", null: false
     t.json "dropoff_location", null: false
+    t.string "commodity"
     t.text "notes"
     t.json "raw"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "broker_company_id", null: false
+    t.integer "load_identifier_id", null: false
     t.index ["broker_company_id"], name: "index_loads_on_broker_company_id"
+    t.index ["load_identifier_id"], name: "index_loads_on_load_identifier_id"
   end
 
   add_foreign_key "broker_company_identifiers", "broker_companies"
   add_foreign_key "broker_company_identifiers", "load_boards"
   add_foreign_key "load_identifiers", "load_boards"
-  add_foreign_key "load_identifiers", "loads", on_delete: :cascade
   add_foreign_key "loads", "broker_companies"
+  add_foreign_key "loads", "load_identifiers", on_delete: :cascade
 end

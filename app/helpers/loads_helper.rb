@@ -1,8 +1,4 @@
 module LoadsHelper
-  def place(place)
-    place.slice('city', 'state').values.join(', ')
-  end
-
   def currency(raw, show_cents: true)
     return nil unless raw
 

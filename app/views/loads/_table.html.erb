@@ -10,6 +10,7 @@
         <th>Rate</th>
         <th>Rate per mile</th>
         <th>Broker</th>
+        <th>Commodity</th>
         <th>Notes</th>
       </tr>
     </thead>
@@ -17,15 +18,16 @@
       <% @loads.each do |l| %>
         <tr title="<%= l.raw %>">
           <td><%= l.pickup_date.strftime('%-m/%-d %H:%M') %></td>
-          <td><%= place(l.pickup_location) %></td>
+          <td><%= l.pickup_location %></td>
           <td><%= l.dropoff_date&.strftime('%-m/%-d %H:%M') %></td>
-          <td><%= place(l.dropoff_location) %></td>
+          <td><%= l.dropoff_location %></td>
           <td><%= number_with_delimiter(l.weight) %></td>
           <td><%= l.length %></td>
           <td><%= l.distance %></td>
           <td><%= currency(l.rate, show_cents: false) %></td>
           <td><%= currency(l.rate_per_mile) %></td>
           <td><%= l.broker_company %></td>
+          <td><%= l.commodity %></td>
           <td><%= l.notes %></td>
         </tr>
       <% end %>

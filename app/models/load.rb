@@ -11,6 +11,14 @@ class Load < ApplicationRecord
   validate :no_lowballs
   validate :no_box_truck_exclusion
 
+  def pickup_location
+    Place.new(super)
+  end
+
+  def dropoff_location
+    Place.new(super)
+  end
+
   def rate_per_mile
     (rate + distance / 2) / distance if rate
   end

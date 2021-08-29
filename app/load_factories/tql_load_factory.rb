@@ -12,11 +12,15 @@ class TqlLoadFactory
   attr_reader :load_data
 
   def call
-    load_identifier = LoadIdentifier.find_by(identifier: load_data.fetch('PostIdReferenceNumber'), load_board: LoadBoard.tql)
-    return if load_identifier
-
     Load.transaction do
-      load = Load.new(
+      load_identifier = LoadIdentifier.find_or_create_by!(
+        identifier: load_data.fetch('PostIdReferenceNumber'),
+        load_board: LoadBoard.tql
+      )
+
+      next if load_identifier.load
+
+      Load.create(
         weight: load_data.fetch('Weight'),
         distance: distance,
         reference_number: load_data.fetch('PostIdReferenceNumber'),
@@ -24,14 +28,12 @@ class TqlLoadFactory
         pickup_date: Time.strptime(load_data.fetch('LoadDate'), TIME_TEMPLATE),
         dropoff_location: load_data.fetch('Destination'),
         dropoff_date: Time.strptime(load_data.fetch('DeliveryDate'), TIME_TEMPLATE),
+        commodity: load_data.fetch('CommoditySummary'),
         notes: load_data.fetch('Notes'),
         broker_company: BrokerCompany.tql,
-        raw: load_data
+        raw: load_data,
+        load_identifier: load_identifier
       )
-
-      next unless load.save
-
-      LoadIdentifier.create(identifier: load_data.fetch('PostIdReferenceNumber'), load: load, load_board: LoadBoard.tql)
     end
   end
 

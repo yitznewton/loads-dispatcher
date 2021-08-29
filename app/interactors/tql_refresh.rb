@@ -11,7 +11,7 @@ class TqlRefresh
     url = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'
 
     Load.transaction do
-      LoadBoard.tql.loads.delete_all
+      LoadBoard.tql.load_identifiers.delete_all
 
       City.all.each do |destination_city|
         cache_key = "tql/#{origin_date.to_s}/#{origin_location.id}/#{destination_city.id}"
