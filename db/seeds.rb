@@ -19,6 +19,12 @@ City.create!([
                }
              ])
 
+BrokerCompany.create!([
+                        {
+                          name: 'TQL'
+                        }
+                      ])
+
 LoadBoard.create!([
                     {
                       name: 'Truckers Edge'

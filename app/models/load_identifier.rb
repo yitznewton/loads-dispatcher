@@ -1,4 +1,4 @@
 class LoadIdentifier < ApplicationRecord
   belongs_to :load_board
-  belongs_to :load
+  has_one :load
 end

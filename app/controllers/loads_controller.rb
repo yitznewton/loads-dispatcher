@@ -2,17 +2,7 @@ class LoadsController < ApplicationController
   def index
     @origin_location = City.first
 
-    if valid_to_search?
-      # Load.delete_all
-      #
-      # TruckersEdgeRefresh.call(
-      #   origin_location: @origin_location,
-      #   origin_date: origin_date,
-      #   auth_token: params[:dat_auth_token]
-      # )
-
-      @loads = Load.all.includes(:broker_company).order(:pickup_date)
-    end
+    @loads = Load.all.includes(:broker_company).order(:pickup_date)
   end
 
   def origin_date

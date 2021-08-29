@@ -9,7 +9,7 @@
         <th>Distance</th>
         <th>Rate</th>
         <th>Rate per mile</th>
-        <th colspan="2">Broker</th>
+        <th>Broker</th>
         <th>Notes</th>
       </tr>
     </thead>
@@ -26,7 +26,6 @@
           <td><%= currency(l.rate, show_cents: false) %></td>
           <td><%= currency(l.rate_per_mile) %></td>
           <td><%= l.broker_company %></td>
-          <td><%= l.contact_name %></td>
           <td><%= l.notes %></td>
         </tr>
       <% end %>

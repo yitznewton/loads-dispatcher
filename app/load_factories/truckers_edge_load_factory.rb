@@ -14,30 +14,30 @@ class TruckersEdgeLoadFactory
 
   def call
     load_identifier = LoadIdentifier.find_by(identifier: load_data.fetch('matchId'), load_board: LoadBoard.truckers_edge)
-    return load_identifier.load if load_identifier
+    return if load_identifier
 
-    load = Load.new(
-      weight: load_data['weight'],
-      length: load_data['length'],
-      distance: distance(load_data),
-      rate: load_data['rate']&.*(100)&.nonzero?,
-      contact_name: load_data['contactName']&.slice('first', 'last')&.values&.compact&.join(' '),
-      contact_phone: phone(load_data['callback']),
-      contact_email: email(load_data['callback']),
-      reference_number: load_data['postersReferenceId'],
-      pickup_location: load_data['origin'],
-      pickup_date: load_data['pickupDate'].to_time,
-      dropoff_location: load_data['destination'],
-      broker_company: broker_company_identifier.broker_company,
-      notes: load_data['comments']&.join('. '),
-      raw: load_data
-    )
+    Load.transaction do
+      load = Load.new(
+        weight: load_data['weight'],
+        length: load_data['length'],
+        distance: distance(load_data),
+        rate: load_data['rate']&.*(100)&.nonzero?,
+        contact_name: load_data['contactName']&.slice('first', 'last')&.values&.compact&.join(' '),
+        contact_phone: phone(load_data['callback']),
+        contact_email: email(load_data['callback']),
+        reference_number: load_data['postersReferenceId'],
+        pickup_location: load_data['origin'],
+        pickup_date: load_data['pickupDate'].to_time,
+        dropoff_location: load_data['destination'],
+        broker_company: broker_company_identifier.broker_company,
+        notes: load_data['comments']&.join('. '),
+        raw: load_data
+      )
 
-    return nil unless load.save
+      next unless load.save
 
-    LoadIdentifier.create(identifier: load_data.fetch('matchId'), load: load, load_board: LoadBoard.truckers_edge)
-
-    load
+      LoadIdentifier.create(identifier: load_data.fetch('matchId'), load: load, load_board: LoadBoard.truckers_edge)
+    end
   end
 
   private
@@ -56,16 +56,16 @@ class TruckersEdgeLoadFactory
     callback.fetch('email') if callback.fetch('type') == CALLBACK_TYPE_EMAIL
   end
 
-  def distance(load)
-    return distance_from_google if load.fetch('isTripMilesAir')
+  def distance
+    return distance_from_google if load_data.fetch('isTripMilesAir')
 
-    load.fetch('tripMiles').nonzero? || distance_from_google
+    load_data.fetch('tripMiles').nonzero? || distance_from_google
   end
 
   def distance_from_google
     DistanceFromGoogle.call(
-      origin: load.fetch('origin').slice('city', 'state').values.join(', '),
-      destination: load.fetch('destination').slice('city', 'state').values.join(', ')
+      origin: load_data.fetch('origin').slice('city', 'state').values.join(', '),
+      destination: load_data.fetch('destination').slice('city', 'state').values.join(', ')
     )
   end
 end
