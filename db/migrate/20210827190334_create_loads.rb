@@ -14,7 +14,7 @@ class CreateLoads < ActiveRecord::Migration[6.1]
       t.json :pickup_location, null: false
       t.json :dropoff_location, null: false
       t.text :notes
-      t.json :other
+      t.json :raw
 
       t.timestamps
     end

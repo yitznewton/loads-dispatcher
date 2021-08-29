@@ -1,0 +1,1 @@
+class BadTruckersEdgeResponse < StandardError; end

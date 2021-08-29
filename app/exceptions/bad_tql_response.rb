@@ -1,0 +1,1 @@
+class BadTqlResponse < StandardError; end

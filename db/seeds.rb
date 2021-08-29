@@ -22,5 +22,8 @@ City.create!([
 LoadBoard.create!([
                     {
                       name: 'Truckers Edge'
+                    },
+                    {
+                      name: 'TQL'
                     }
                   ])
