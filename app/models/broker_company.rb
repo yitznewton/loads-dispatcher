@@ -11,10 +11,6 @@ class BrokerCompany < ApplicationRecord
     'Total Quality Logistics Inc' => 'TQL'
   }.freeze
 
-  def self.tql
-    @tql ||= find_by!(name: NAME_TQL)
-  end
-
   def to_s
     NAME_SUBSTITUTIONS.fetch(name, name)
                       .delete_suffix(' INC')

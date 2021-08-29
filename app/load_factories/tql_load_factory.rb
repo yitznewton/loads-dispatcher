@@ -28,9 +28,9 @@ class TqlLoadFactory
         pickup_date: Time.strptime(load_data.fetch('LoadDate'), TIME_TEMPLATE),
         dropoff_location: load_data.fetch('Destination'),
         dropoff_date: Time.strptime(load_data.fetch('DeliveryDate'), TIME_TEMPLATE),
-        commodity: load_data.fetch('CommoditySummary'),
+        commodity: load_data['CommoditySummary'],
         notes: load_data.fetch('Notes'),
-        broker_company: BrokerCompany.tql,
+        broker_company: broker_company,
         raw: load_data,
         load_identifier: load_identifier
       )
@@ -39,10 +39,8 @@ class TqlLoadFactory
 
   private
 
-  def broker_company_identifier
-    BrokerCompanyIdentifier
-      .create_with(broker_company: BrokerCompany.new(name: load_data.fetch('companyName')))
-      .find_or_create_by(identifier: load_data.fetch('combinedOfficeId'), load_board: LoadBoard.truckers_edge)
+  def broker_company
+    @broker_company ||= BrokerCompanyIdentifier.find_by!(load_board: LoadBoard.tql).broker_company
   end
 
   def distance
