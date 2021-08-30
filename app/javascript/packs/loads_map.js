@@ -1,5 +1,4 @@
 import { Loader } from "@googlemaps/js-api-loader"
-import MarkerClusterer from '@googlemaps/markerclustererplus';
 
 let map;
 
@@ -18,19 +17,29 @@ loader.load().then(() => {
       let markers = [];
 
       json.slice(0, 5).forEach(load => {
+      // json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
+        const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
 
-        markers.push(new google.maps.Marker({
+        const listener = (strokeWeight) => () => {
+          line.setOptions({strokeWeight: strokeWeight, icons: icons(strokeWeight)});
+        };
+
+        const markerA = new google.maps.Marker({
           position: load.pickup_location,
           map,
-          title: load.pickup_location.readable
-        }));
-        markers.push(new google.maps.Marker({
+          label: "A",
+          title: title
+        });
+        const markerB = new google.maps.Marker({
           position: load.dropoff_location,
           map,
-          title: load.dropoff_location.readable
-        }));
+          label: "B",
+          title: title
+        });
+        markers.push(markerA);
+        markers.push(markerB);
         const icons = strokeWeight => (
           [{icon: {path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, strokeWeight: strokeWeight}, offset: '50%'}]
         );
@@ -41,15 +50,17 @@ loader.load().then(() => {
           strokeWeight: 1,
           map: map
         });
-        line.addListener('mouseover', function(e) {this.setOptions({strokeWeight: 2, icons: icons(2)})});
-        line.addListener('mouseout', function(e) {this.setOptions({strokeWeight: 1, icons: icons(1)})});
+        // line.addListener('mouseover', function(e) {
+        //   // TODO: overlay with origin and destination names & other info
+        //   this.setOptions({strokeWeight: 2, icons: icons(2)});
+        // });
+        [line, markerA, markerB].forEach(obj => {
+          obj.addListener('mouseover', listener(2));
+          obj.addListener('mouseout', listener(1));
+        });
       });
       map.setCenter(bounds.getCenter());
       map.fitBounds(bounds);
-      new MarkerClusterer(map, markers, {
-        averageCenter: true,
-        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-      });
     });
   });
 });
