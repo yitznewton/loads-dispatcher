@@ -2,6 +2,7 @@
   <table>
     <thead>
       <tr>
+        <th></th>
         <th colspan="2">Pickup</th>
         <th colspan="2">Dropoff</th>
         <th>Weight</th>
@@ -16,7 +17,8 @@
     </thead>
     <tbody>
       <% @loads.each do |l| %>
-        <tr title="<%= l.raw %>">
+        <tr>
+          <td><%= button_to 'Dismiss', l, method: :delete, form_class: 'dismiss-button-form', remote: true %></td>
           <td><%= l.pickup_date.strftime('%-m/%-d %H:%M') %></td>
           <td><%= l.pickup_location %></td>
           <td><%= l.dropoff_date&.strftime('%-m/%-d %H:%M') %></td>
@@ -34,3 +36,5 @@
     </tbody>
   </table>
 <% end %>
+
+<%= javascript_pack_tag 'loads_table.js' %>

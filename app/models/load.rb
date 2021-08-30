@@ -13,6 +13,12 @@ class Load < ApplicationRecord
   validate :no_roll_door_exclusion
   validate :no_nyc_long_island
 
+  scope :active, -> { where(dismissed_at: nil) }
+
+  def dismiss!
+    update(dismissed_at: Time.current)
+  end
+
   def pickup_location
     Place.new(super)
   end
