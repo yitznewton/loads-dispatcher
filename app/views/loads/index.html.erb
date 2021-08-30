@@ -2,5 +2,11 @@
 
 <h1>All loads</h1>
 
+<%= form_with method: :get do |form| %>
+<%= form.date_field :earliest_pickup, value: earliest_pickup.to_date %>
+<%= form.date_field :latest_pickup, value: latest_pickup.to_date %>
+<%= form.submit 'Search' %>
+<% end %>
+
 <%= render 'table' %>
 <%= render 'map' %>

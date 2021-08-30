@@ -29,6 +29,8 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
       dropoff_location: load_data['destination'],
       broker_company: broker_company_identifier.broker_company,
       notes: load_data['comments']&.join('. '),
+      equipment_type: load_data['equipmentType'],
+      equipment_type_code: load_data['equipmentTypeCode'],
       raw: load_data
     }
   end

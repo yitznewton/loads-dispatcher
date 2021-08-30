@@ -7,11 +7,13 @@
         <th colspan="2">Dropoff</th>
         <th>Weight</th>
         <th>Length</th>
+        <th>Eqpmt</th>
         <th>Distance</th>
         <th>Rate</th>
         <th>Rate per mile</th>
         <th>Broker</th>
         <th>Commodity</th>
+        <th>Ref</th>
         <th>Notes</th>
       </tr>
     </thead>
@@ -26,11 +28,15 @@
           <td><%= l.dropoff_location %></td>
           <td><%= number_with_delimiter(l.weight) %></td>
           <td><%= l.length %></td>
+          <td><%= content_tag 'span', title: l.equipment_type do %>
+                <%= l.equipment_type_code %>
+              <% end %></td>
           <td><%= l.distance %></td>
           <td><%= currency(l.rate, show_cents: false) %></td>
           <td><%= currency(l.rate_per_mile) %></td>
           <td><%= l.broker_company %></td>
           <td><%= l.commodity %></td>
+          <td><%= l.reference_number %></td>
           <td><%= l.notes %></td>
         </tr>
       <% end %>

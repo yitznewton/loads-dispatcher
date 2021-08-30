@@ -1,6 +1,14 @@
 class Load < ApplicationRecord
   MINIMUM_OFFERED_RATE = 100
 
+  EXCLUDED_NOTES = {
+    hazmat: 'hazmat',
+    dry_van_only: 'dryvanonly',
+    no_box_truck: 'noboxtruck',
+    no_roll_door: 'norolldoor',
+    drop_trailer: 'droptrailer'
+  }.freeze
+
   belongs_to :broker_company
   belongs_to :load_identifier
 
@@ -9,14 +17,13 @@ class Load < ApplicationRecord
   validates :pickup_date, presence: true
 
   validate :no_lowballs
-  validate :no_box_truck_exclusion
-  validate :no_roll_door_exclusion
+  validate :no_excluded_notes
   validate :no_nyc_long_island
 
   scope :active, -> { where(dismissed_at: nil) }
 
   def dismiss!
-    update(dismissed_at: Time.current)
+    update!(dismissed_at: Time.current)
   end
 
   def pickup_location
@@ -39,15 +46,15 @@ class Load < ApplicationRecord
     end
   end
 
-  def no_box_truck_exclusion
-    if notes.to_s.downcase.gsub(' ', '').include?('noboxtruck')
-      errors.add(:no_box_truck_exclusion, 'Box trucks excluded')
-    end
-  end
+  def no_excluded_notes
+    return unless notes.present?
 
-  def no_roll_door_exclusion
-    if notes.to_s.downcase.gsub(' ', '').include?('norolldoor')
-      errors.add(:no_box_truck_exclusion, 'Roll doors excluded')
+    note_thing = notes.downcase.gsub(' ', '')
+
+    EXCLUDED_NOTES.each do |key, excluded_text|
+      if note_thing.include?(excluded_text)
+        errors.add(key, 'Notes include excluded text')
+      end
     end
   end
 

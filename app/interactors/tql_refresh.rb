@@ -68,7 +68,7 @@ class TqlRefresh < BaseRefresh
       SaveSearch: true,
       TrailerSizeId: 3,
       TrailerTypeId: 2,
-      Weight: '11000'
+      Weight: '17000'
     }.to_json
   end
   # rubocop:enable Metrics/MethodLength

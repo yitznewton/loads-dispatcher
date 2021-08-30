@@ -71,7 +71,7 @@ class TruckersEdgeRefresh < BaseRefresh
         sortDirection: 'Ascending',
         includeFulls: true,
         includeLtls: true,
-        weightPounds: 11_000,
+        weightPounds: 17_000,
         minimumRelevanceThreshold: 0,
         hiddenMatchIds: []
       }

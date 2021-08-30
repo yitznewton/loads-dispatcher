@@ -7,6 +7,7 @@ class BrokerCompany < ApplicationRecord
   NAME_SUBSTITUTIONS = {
     'Ch Robinson Company' => 'CH Robinson',
     'Coyote Logistics Llc' => 'Coyote',
+    'Jb Hunt Transport Services' => 'JB Hunt',
     'Schneider National Inc' => 'Schneider',
     'Total Quality Logistics Inc' => 'TQL'
   }.freeze
