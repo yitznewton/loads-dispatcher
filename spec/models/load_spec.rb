@@ -38,6 +38,14 @@ describe Load do
         expect(load).not_to be_valid
       end
     end
+
+    context 'specifying no roll doors' do
+      let(:attributes) {{ notes: 'No roll doors!!' }}
+
+      specify do
+        expect(load).not_to be_valid
+      end
+    end
   end
 
   def base_attributes

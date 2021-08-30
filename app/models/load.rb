@@ -10,6 +10,7 @@ class Load < ApplicationRecord
 
   validate :no_lowballs
   validate :no_box_truck_exclusion
+  validate :no_roll_door_exclusion
   validate :no_nyc_long_island
 
   def pickup_location
@@ -33,8 +34,14 @@ class Load < ApplicationRecord
   end
 
   def no_box_truck_exclusion
-    if notes.to_s.downcase.include?('no box truck')
+    if notes.to_s.downcase.gsub(' ', '').include?('noboxtruck')
       errors.add(:no_box_truck_exclusion, 'Box trucks excluded')
+    end
+  end
+
+  def no_roll_door_exclusion
+    if notes.to_s.downcase.gsub(' ', '').include?('norolldoor')
+      errors.add(:no_box_truck_exclusion, 'Roll doors excluded')
     end
   end
 
