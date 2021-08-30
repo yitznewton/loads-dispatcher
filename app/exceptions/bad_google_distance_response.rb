@@ -1,1 +1,0 @@
-class BadGoogleDistanceResponse < StandardError; end

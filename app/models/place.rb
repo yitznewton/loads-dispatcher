@@ -1,8 +1,10 @@
 class Place
+  include ActiveModel::Serialization
+
   NYC_AND_LONG_ISLAND_COUNTIES = ['New York', 'Queens', 'Kings', 'Richmond', 'Bronx', 'Nassau', 'Suffolk'].freeze
 
   def initialize(place_data)
-    @place_data = place_data
+    @place_data = place_data.with_indifferent_access
   end
 
   def city
@@ -11,6 +13,14 @@ class Place
 
   def state
     place_data['StateCode'] || place_data['state']
+  end
+
+  def latitude
+    place_data['latitude'] || place_data['Latitude']
+  end
+
+  def longitude
+    place_data['longitude'] || place_data['Longitude']
   end
 
   def county

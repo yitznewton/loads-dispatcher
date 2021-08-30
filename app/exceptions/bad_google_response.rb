@@ -1,0 +1,1 @@
+class BadGoogleResponse < StandardError; end

@@ -17,9 +17,9 @@ class TqlLoadFactory < BaseLoadFactory
       weight: load_data.fetch('Weight'),
       distance: distance,
       reference_number: load_data.fetch('PostIdReferenceNumber'),
-      pickup_location: load_data.fetch('Origin'),
+      pickup_location: location(load_data.fetch('Origin')),
       pickup_date: Time.strptime(load_data.fetch('LoadDate'), TIME_TEMPLATE),
-      dropoff_location: load_data.fetch('Destination'),
+      dropoff_location: location(load_data.fetch('Destination')),
       dropoff_date: Time.strptime(load_data.fetch('DeliveryDate'), TIME_TEMPLATE),
       commodity: load_data['CommoditySummary'],
       notes: load_data.fetch('Notes'),
@@ -32,6 +32,10 @@ class TqlLoadFactory < BaseLoadFactory
 
   def broker_company
     @broker_company ||= BrokerCompanyIdentifier.find_by!(load_board: LoadBoard.tql).broker_company
+  end
+
+  def location(location_data)
+    location_data.merge(Coordinate.for_place(Place.new(location_data)).attributes)
   end
 
   def distance
