@@ -1,4 +1,4 @@
-class TruckersEdgeRefresh
+class TruckersEdgeRefresh < BaseRefresh
   BASE_REQUEST_HEADERS = {
     'Accept' => 'application/json',
     'Content-Type' => 'application/json',
@@ -11,38 +11,54 @@ class TruckersEdgeRefresh
 
   URL = 'https://freight.api.prod.dat.com/trucker/api/v2/freightMatching/search'.freeze
 
-  def self.call(origin_date:, auth_token:)
-    touched_ids = []
-
-    Load.transaction do
-      City.routes.each do |(origin_city, destination_city)|
-        data = response_body(auth_token, destination_city, origin_city, origin_date)
-        raise BadTruckersEdgeResponse unless data.include?('matchDetails')
-
-        data.fetch('matchDetails').each { |l| TruckersEdgeLoadFactory.call(l).tap { |l| touched_ids << l&.id } }
-      end
-
-      LoadBoard.truckers_edge.load_identifiers.active.joins(:load).where.not(load: {id: touched_ids}).update_all(deleted_at: Time.current)
-    end
+  def initialize(origin_date:, auth_token:)
+    @origin_date = origin_date
+    @auth_token = auth_token
   end
 
-  def self.response_body(auth_token, destination_city, origin_city, origin_date)
+  attr_reader :origin_date, :auth_token
+
+  def self.call(**kwargs)
+    new(**kwargs).call
+  end
+
+  def response_exception_klass
+    BadTruckersEdgeResponse
+  end
+
+  def load_factory_klass
+    TruckersEdgeLoadFactory
+  end
+
+  def loads?(data)
+    data.include?('matchDetails')
+  end
+
+  def loads(data)
+    data.fetch('matchDetails')
+  end
+
+  def load_board
+    LoadBoard.truckers_edge
+  end
+
+  def response_body(origin_city:, destination_city:)
     JSON.parse(Faraday.post(
       URL,
-      request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
+      request_payload(pickup_location: origin_city, dropoff_location: destination_city),
       BASE_REQUEST_HEADERS.merge('Authorization' => "Bearer #{auth_token}")
     ).body)
   end
 
   # rubocop:todo Metrics/MethodLength
-  def self.request_payload(pickup_location:, pickup_date:, dropoff_location:)
+  def request_payload(pickup_location:, dropoff_location:)
     {
       criteria: {
         origin: location_attributes(pickup_location),
         destination: location_attributes(dropoff_location),
         assetType: 'Shipment',
-        startDate: pickup_date.to_time.strftime('%Y-%m-%dT%H:%M:%SZ'),
-        endDate: (pickup_date.to_time + 3.days).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        startDate: origin_date.to_time.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        endDate: (origin_date.to_time + 3.days).strftime('%Y-%m-%dT%H:%M:%SZ'),
         doNotBook: false,
         equipmentTypes: %w[SB V VA VH VF],
         destinationDeadheadMiles: dropoff_location.radius.to_s,
@@ -61,7 +77,7 @@ class TruckersEdgeRefresh
   end
   # rubocop:enable Metrics/MethodLength
 
-  def self.location_attributes(location)
+  def location_attributes(location)
     location.attributes.slice('city', 'state', 'latitude', 'longitude', 'county').merge(type: 'point')
   end
 end

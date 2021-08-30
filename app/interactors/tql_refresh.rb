@@ -1,4 +1,4 @@
-class TqlRefresh
+class TqlRefresh < BaseRefresh
   REQUEST_HEADERS = {
     'Accept' => 'application/json',
     'Authorization' => 'Bearer',
@@ -9,31 +9,46 @@ class TqlRefresh
 
   URL = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'.freeze
 
-  def self.call(origin_date:)
-    touched_ids = []
-
-    Load.transaction do
-      City.routes.each do |(origin_city, destination_city)|
-        data = response_body(destination_city, origin_city, origin_date)
-        raise BadTqlResponse unless data.include?('PostedLoads')
-
-        data.fetch('PostedLoads').each { |l| TqlLoadFactory.call(l).tap { |l| touched_ids << l&.id } }
-      end
-
-      LoadBoard.tql.load_identifiers.active.joins(:load).where.not(load: {id: touched_ids}).update_all(deleted_at: Time.current)
-    end
+  def initialize(origin_date:)
+    @origin_date = origin_date
   end
 
-  def self.response_body(destination_city, origin_city, origin_date)
+  attr_reader :origin_date
+
+  def self.call(**kwargs)
+    new(**kwargs).call
+  end
+
+  def response_exception_klass
+    BadTqlResponse
+  end
+
+  def load_factory_klass
+    TqlLoadFactory
+  end
+
+  def loads?(data)
+    data.include?('PostedLoads')
+  end
+
+  def loads(data)
+    data.fetch('PostedLoads')
+  end
+
+  def load_board
+    LoadBoard.tql
+  end
+
+  def response_body(origin_city:, destination_city:)
     JSON.parse(Faraday.post(
       URL,
-      request_payload(pickup_location: origin_city, pickup_date: origin_date, dropoff_location: destination_city),
+      request_payload(pickup_location: origin_city, dropoff_location: destination_city),
       REQUEST_HEADERS
     ).body)
   end
 
   # rubocop:todo Metrics/MethodLength
-  def self.request_payload(pickup_location:, pickup_date:, dropoff_location:)
+  def request_payload(pickup_location:, dropoff_location:)
     {
       CarrierID: nil,
       DestCity: dropoff_location.city,
@@ -42,7 +57,7 @@ class TqlRefresh
       DestState: dropoff_location.state,
       IsActive: true,
       IsFavorite: 0,
-      LoadDate: "#{pickup_date}T04:00:00.000Z",
+      LoadDate: "#{origin_date}T04:00:00.000Z",
       OriginCity: pickup_location.city,
       OriginCityID: pickup_location.tql_id,
       OriginRadius: pickup_location.radius,
