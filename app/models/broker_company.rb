@@ -1,6 +1,6 @@
 class BrokerCompany < ApplicationRecord
-  has_many :broker_company_identifiers
-  has_many :loads
+  has_many :broker_company_identifiers, dependent: :destroy
+  has_many :loads, dependent: :restrict_with_error
 
   NAME_TQL = 'TQL'.freeze
 
