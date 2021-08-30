@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_30_012410) do
+ActiveRecord::Schema.define(version: 2021_08_30_030514) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2021_08_30_012410) do
     t.integer "load_board_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at"
     t.index ["load_board_id"], name: "index_load_identifiers_on_load_board_id"
   end
 

@@ -1,6 +1,6 @@
 class LoadsController < ApplicationController
   def index
-    @loads = Load.all.includes(:broker_company).order(:pickup_date)
+    @loads = Load.joins(:load_identifier).merge(LoadIdentifier.active).includes(:broker_company).order(:pickup_date)
 
     respond_to do |format|
       format.html

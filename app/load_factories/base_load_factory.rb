@@ -12,14 +12,14 @@ class BaseLoadFactory
   def call
     Load.transaction do
       load = Load.find_by(load_identifier: load_identifier)
+      next Load.create(parsed_attributes.merge(load_identifier: load_identifier)) unless load
 
-      if load
-        load.update(parsed_attributes)
-        load.destroy unless load.valid?
-        next
-      end
+      load.update(parsed_attributes)
 
-      Load.create(parsed_attributes.merge(load_identifier: load_identifier))
+      next load if load.valid?
+
+      load.destroy
+      next nil
     end
   end
 end

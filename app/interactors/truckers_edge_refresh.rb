@@ -12,15 +12,17 @@ class TruckersEdgeRefresh
   URL = 'https://freight.api.prod.dat.com/trucker/api/v2/freightMatching/search'.freeze
 
   def self.call(origin_date:, auth_token:)
-    Load.transaction do
-      LoadBoard.truckers_edge.load_identifiers.delete_all
+    touched_ids = []
 
+    Load.transaction do
       City.routes.each do |(origin_city, destination_city)|
         data = response_body(auth_token, destination_city, origin_city, origin_date)
         raise BadTruckersEdgeResponse unless data.include?('matchDetails')
 
-        data.fetch('matchDetails').each { |l| TruckersEdgeLoadFactory.call(l) }
+        data.fetch('matchDetails').each { |l| TruckersEdgeLoadFactory.call(l).tap { |l| touched_ids << l&.id } }
       end
+
+      LoadBoard.truckers_edge.load_identifiers.active.joins(:load).where.not(load: {id: touched_ids}).update_all(deleted_at: Time.current)
     end
   end
 

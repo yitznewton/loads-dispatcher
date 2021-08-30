@@ -10,15 +10,17 @@ class TqlRefresh
   URL = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'.freeze
 
   def self.call(origin_date:)
-    Load.transaction do
-      LoadBoard.tql.load_identifiers.delete_all
+    touched_ids = []
 
+    Load.transaction do
       City.routes.each do |(origin_city, destination_city)|
         data = response_body(destination_city, origin_city, origin_date)
         raise BadTqlResponse unless data.include?('PostedLoads')
 
-        data.fetch('PostedLoads').each { |l| TqlLoadFactory.call(l) }
+        data.fetch('PostedLoads').each { |l| TqlLoadFactory.call(l).tap { |l| touched_ids << l&.id } }
       end
+
+      LoadBoard.tql.load_identifiers.active.joins(:load).where.not(load: {id: touched_ids}).update_all(deleted_at: Time.current)
     end
   end
 
