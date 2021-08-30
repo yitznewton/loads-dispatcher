@@ -18,7 +18,7 @@ class BaseLoadFactory
 
       next load if load.valid?
 
-      load.destroy
+      load_identifier.destroy!
       next nil
     end
   end

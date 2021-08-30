@@ -3,11 +3,24 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 table {
   border-collapse: collapse;
+  font-size: 0.9em;
 
   td, th {
     border: 1px solid black;
     padding: 0.3em 0.4em;
   }
+}
+
+.heavy-left {
+  border-left-width: 3px;
+}
+
+.heavy-right {
+  border-right-width: 3px;
+}
+
+.shaded {
+  background: #ddd;
 }
 
 #map {

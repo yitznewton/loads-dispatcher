@@ -1,7 +1,5 @@
 <div id="map"></div>
 
-<%= content_tag :div, id: 'google-maps-api-key', data: { key: ENV['GOOGLE_MAPS_API_KEY'] } do %>
-<% end %>
 <%= content_tag :div, id: 'earliest-pickup', data: { date: params[:earliest_pickup] } do %>
 <% end %>
 <%= content_tag :div, id: 'latest-pickup', data: { date: params[:latest_pickup] } do %>

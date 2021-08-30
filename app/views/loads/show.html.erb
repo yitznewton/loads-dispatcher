@@ -1,0 +1,67 @@
+<% content_for(:page_title, "Load: #{@load.pickup_location} to #{@load.dropoff_location}") %>
+
+<% origin = "#{@load.pickup_location.latitude},#{@load.pickup_location.longitude}" %>
+<% destination = "#{@load.dropoff_location.latitude},#{@load.dropoff_location.longitude}" %>
+
+<iframe width="800" height="400" style="border:0" loading="lazy" allowfullscreen
+        src="https://www.google.com/maps/embed/v1/directions?origin=<%= origin %>&destination=<%= destination %>&key=<%= ENV['GOOGLE_MAPS_API_KEY'] %>"></iframe>
+
+<%= button_to 'Dismiss', @load, method: :delete %>
+
+<dl>
+  <%= content_tag :dt, 'Pickup' %>
+  <%= content_tag :dd, "#{@load.pickup_date&.strftime('%-m/%-d %H:%M')} - #{@load.pickup_location}" %>
+
+  <%= content_tag :dt, 'Dropoff' %>
+  <%= content_tag :dd, "#{@load.dropoff_date&.strftime('%-m/%-d %H:%M')} - #{@load.dropoff_location}" %>
+
+  <%= content_tag :dt, 'Broker' %>
+  <%= content_tag :dd, @load.broker_company %>
+
+  <%= content_tag :dt, 'Reference number' %>
+  <%= content_tag :dd, @load.reference_number %>
+
+  <%= content_tag :dt, 'Weight' %>
+  <%= content_tag :dd, @load.weight %>
+
+  <%= content_tag :dt, 'Length' %>
+  <%= content_tag :dd, @load.length %>
+
+  <%= content_tag :dt, 'Equipment' %>
+  <%= content_tag :dd, @load.equipment_type && "#{@load.equipment_type} (#{@load.equipment_type_code})" %>
+
+  <%= content_tag :dt, 'Distance' %>
+  <%= content_tag :dd, @load.distance %>
+
+  <%= content_tag :dt, 'Rate' %>
+  <%= content_tag :dd, @load.rate %>
+
+  <%= content_tag :dt, 'Rate per mile' %>
+  <%= content_tag :dd, @load.rate_per_mile %>
+
+  <%= content_tag :dt, 'Notes' %>
+  <%= content_tag :dd, @load.notes %>
+
+  <%= content_tag :dt, 'Rates' %>
+  <%= content_tag :dd do -%>
+    <% rates = (100..800).step(10).to_a %>
+    <% columns = 5 %>
+    <table>
+      <tbody>
+      <% (0...(rates.length / columns)).each do |i| %>
+        <%= content_tag(:tr) do -%>
+          <% (0...columns).each do |j| %>
+            <% rate = rates[i+rates.length/columns*j] %>
+            <% shaded = rate.between?(300, 700) %>
+            <%= content_tag(:td, number_with_precision(rate.to_f/100, precision: 2), class: ['heavy-left', shaded && 'shaded']) %>
+            <%= content_tag(:td, number_with_precision(@load.distance * rate.to_f/100, precision: 0), class: ['heavy-right', shaded && 'shaded']) %>
+          <% end %>
+        <% end -%>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+</dl>
+
+<%= raw(ap(@load.raw, html: true)) %>

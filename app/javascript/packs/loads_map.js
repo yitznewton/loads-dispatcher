@@ -9,14 +9,13 @@ const loader = new Loader({
 })
 
 const urlParams = new URLSearchParams({
-  earliest_pickup: document.getElementById("earliest-pickup").dataset.date,
-  latest_pickup: document.getElementById("latest-pickup").dataset.date
+  earliest_pickup: document.getElementById("earliest-pickup").dataset.date || '',
+  latest_pickup: document.getElementById("latest-pickup").dataset.date || ''
 })
 
 loader.load().then(() => {
   fetch('/loads.json?' + urlParams).then(data => {
     data.json().then(json => {
-      return;
       const bounds = new google.maps.LatLngBounds();
 
       map = new google.maps.Map(document.getElementById("map"));

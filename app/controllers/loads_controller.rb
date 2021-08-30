@@ -15,17 +15,30 @@ class LoadsController < ApplicationController
     end
   end
 
+  def show
+    @load = Load.find(params[:id])
+  end
+
   def destroy
     Load.find(params[:id]).dismiss!
+
+    respond_to do |format|
+      format.json do
+        head :ok
+      end
+      format.html do
+        redirect_to loads_path
+      end
+    end
   end
 
   def earliest_pickup
-    (params[:earliest_pickup] || Time.current).to_time.beginning_of_day
+    (params[:earliest_pickup].presence || Time.current).to_time.beginning_of_day
   end
   helper_method :earliest_pickup
 
   def latest_pickup
-    (params[:latest_pickup] || Time.current).to_time.end_of_day
+    (params[:latest_pickup].presence || Time.current).to_time.end_of_day
   end
   helper_method :latest_pickup
 end
