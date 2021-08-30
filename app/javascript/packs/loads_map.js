@@ -3,7 +3,7 @@ import { Loader } from "@googlemaps/js-api-loader"
 let map;
 
 const loader = new Loader({
-  apiKey: "AIzaSyA4vUx9y-AKt-THxhqNTniE5WK36HTcHmQ",
+  apiKey: document.getElementById("google-maps-api-key").dataset.key,
   version: "weekly",
   libraries: []
 })
@@ -49,6 +49,11 @@ loader.load().then(() => {
           geodesic: true,
           strokeWeight: 1,
           map: map
+        });
+        document.addEventListener(`load:${load.id}:delete`, () => {
+          markerA.setMap(null);
+          markerB.setMap(null);
+          line.setMap(null);
         });
         // line.addListener('mouseover', function(e) {
         //   // TODO: overlay with origin and destination names & other info

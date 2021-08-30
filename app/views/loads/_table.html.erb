@@ -18,7 +18,8 @@
     <tbody>
       <% @loads.each do |l| %>
         <tr>
-          <td><%= button_to 'Dismiss', l, method: :delete, form_class: 'dismiss-button-form', remote: true %></td>
+          <td><%= button_to 'Dismiss', l, method: :delete, form_class: 'dismiss-button-form', remote: true,
+                            form: { data: { load_id: l.id } } %></td>
           <td><%= l.pickup_date.strftime('%-m/%-d %H:%M') %></td>
           <td><%= l.pickup_location %></td>
           <td><%= l.dropoff_date&.strftime('%-m/%-d %H:%M') %></td>

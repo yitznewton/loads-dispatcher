@@ -1,3 +1,5 @@
 <div id="map"></div>
 
+<%= content_tag :div, id: 'google-maps-api-key', data: { key: ENV['GOOGLE_MAPS_API_KEY'] } do %>
+<% end %>
 <%= javascript_pack_tag 'loads_map.js' %>
