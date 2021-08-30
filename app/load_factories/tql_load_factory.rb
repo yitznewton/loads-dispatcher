@@ -35,7 +35,8 @@ class TqlLoadFactory < BaseLoadFactory
   end
 
   def location(location_data)
-    location_data.merge(Coordinate.for_place(Place.new(location_data)).attributes)
+    coordinate_attributes = Coordinate.for_place(Place.new(location_data))&.attributes.to_h
+    location_data.merge(coordinate_attributes)
   end
 
   def distance

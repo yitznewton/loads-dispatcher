@@ -39,7 +39,7 @@ describe Load do
       end
     end
 
-    context 'specifying no roll doors' do
+    context 'when specifying no roll doors' do
       let(:attributes) {{ notes: 'No roll doors!!' }}
 
       specify do

@@ -9,9 +9,11 @@ class TqlRefresh < BaseRefresh
 
   URL = 'https://lmservicesext.tql.com/carrierdashboard.web/api/SearchLoads2/SearchAvailableLoadsByState/'.freeze
 
+  # rubocop:disable Lint/MissingSuper
   def initialize(origin_date:)
     @origin_date = origin_date
   end
+  # rubocop:enable Lint/MissingSuper
 
   attr_reader :origin_date
 

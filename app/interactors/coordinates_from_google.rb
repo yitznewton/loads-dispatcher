@@ -2,6 +2,7 @@ class CoordinatesFromGoogle
   URL = 'https://maps.googleapis.com/maps/api/geocode/json'.freeze
   STATUS_OK = 'OK'.freeze
 
+  # rubocop:disable Metrics/AbcSize
   def self.call(place)
     raise "Don't call me" if Rails.env.test?
 
@@ -15,4 +16,5 @@ class CoordinatesFromGoogle
     location = response_body['results'].first.dig('geometry', 'location')
     { latitude: location['lat'], longitude: location['lng'] }
   end
+  # rubocop:enable Metrics/AbcSize
 end

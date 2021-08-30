@@ -11,6 +11,7 @@ describe TqlLoadFactory do
 
   before do
     allow(DistanceFromGoogle).to receive(:call).and_return(123)
+    allow(CoordinatesFromGoogle).to receive(:call).and_return(nil)
     LoadBoard.create!(name: 'TQL')
     BrokerCompanyIdentifier.create!([
                                       load_board: LoadBoard.tql,

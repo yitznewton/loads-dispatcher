@@ -11,10 +11,12 @@ class TruckersEdgeRefresh < BaseRefresh
 
   URL = 'https://freight.api.prod.dat.com/trucker/api/v2/freightMatching/search'.freeze
 
+  # rubocop:disable Lint/MissingSuper
   def initialize(origin_date:, auth_token:)
     @origin_date = origin_date
     @auth_token = auth_token
   end
+  # rubocop:enable Lint/MissingSuper
 
   attr_reader :origin_date, :auth_token
 
