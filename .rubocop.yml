@@ -37,6 +37,10 @@ Style/BlockDelimiters:
 Style/Documentation:
   Enabled: false
 
+Style/EmptyMethod:
+  Exclude:
+    - app/controllers/**/*.rb
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 
