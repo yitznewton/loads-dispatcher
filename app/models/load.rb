@@ -35,7 +35,7 @@ class Load < ApplicationRecord
   end
 
   def rate_per_mile
-    (rate + distance / 2) / distance if rate
+    (rate + distance / 2) / distance if distance.nonzero? && rate
   end
 
   # rubocop:disable Style/GuardClause
