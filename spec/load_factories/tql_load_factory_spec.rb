@@ -31,55 +31,14 @@ describe TqlLoadFactory do
         expect(load.distance).to eq(100)
       end
     end
-
-    context 'when missing' do
-      let(:load_data) {{
-        'Miles' => 0
-      }}
-
-      it 'is retrieved from Google using the expected place names' do  # rubocop:disable RSpec/MultipleExpectations
-        expect(load.distance).to eq(123)
-        expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
-      end
-    end
-  end
-
-  it 'extracts broker company name' do
-    expect(load.broker_company.to_s).to eq('TQL')
   end
 
   it 'creates load identifier model' do
     expect(load.load_identifier.identifier).to eq('ABC123')
   end
 
-  describe 'updating' do
-    context 'with invalid data' do
-      it "doesn't create a LoadIdentifier" do
-        updated_data = complete_load_data.merge('Weight' => 0)
-        expect { described_class.call(updated_data) }.not_to(change { LoadIdentifier.count })
-      end
-
-      it "doesn't update the load" do
-        updated_data = complete_load_data.merge('Weight' => 0)
-        expect { described_class.call(updated_data) }.not_to(change { load.rate })
-      end
-
-      it 'removes the load' do
-        updated_data = complete_load_data.merge('Weight' => 0)
-        described_class.call(updated_data)
-        expect(Load.active.count).to eq(0)
-      end
-    end
-
-    it 'updates the load' do
-      updated_data = complete_load_data.merge('Weight' => 8000)
-      described_class.call(updated_data)
-      expect(load.weight).to eq(8000)
-    end
-
-    it "doesn't create duplicates" do
-      expect { described_class.call(complete_load_data) }.not_to(change { Load.count })
-    end
+  it 'sets broker company name' do
+    expect(load.broker_company.to_s).to eq('TQL')
   end
 
   describe 'raw data' do

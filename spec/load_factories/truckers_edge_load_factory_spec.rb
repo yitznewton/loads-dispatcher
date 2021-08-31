@@ -39,18 +39,6 @@ describe TruckersEdgeLoadFactory do
         expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
       end
     end
-
-    context 'when missing' do
-      let(:load_data) {{
-        'isTripMilesAir' => false,
-        'tripMiles' => 0
-      }}
-
-      it 'is retrieved from Google' do  # rubocop:disable RSpec/MultipleExpectations
-        expect(load.distance).to eq(123)
-        expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
-      end
-    end
   end
 
   describe 'rate' do
@@ -75,10 +63,6 @@ describe TruckersEdgeLoadFactory do
     end
   end
 
-  it 'extracts notes' do
-    expect(load.notes).to eq('Foo bar baz')
-  end
-
   it 'extracts contact name' do
     expect(load.contact_name).to eq('Joe Bobkin')
   end
@@ -89,40 +73,6 @@ describe TruckersEdgeLoadFactory do
 
   it 'creates load identifier model' do
     expect(load.load_identifier.identifier).to eq('ABC123')
-  end
-
-  describe 'updating' do
-    context 'with invalid data' do
-      it "doesn't create a LoadIdentifier" do
-        updated_data = complete_load_data.merge('rate' => 1)
-        expect { described_class.call(updated_data) }.not_to(change { LoadIdentifier.count })
-      end
-
-      it "doesn't update the load" do
-        updated_data = complete_load_data.merge('rate' => 1)
-        expect { described_class.call(updated_data) }.not_to(change { load.rate })
-      end
-    end
-
-    it 'updates the load' do
-      updated_data = complete_load_data.merge('rate' => 800)
-      described_class.call(updated_data)
-      expect(load.rate).to eq(80000)
-    end
-
-    it "doesn't create duplicates" do
-      expect { described_class.call(complete_load_data) }.not_to(change { Load.count })
-    end
-  end
-
-  describe 'raw data' do
-    it 'is attached to the load' do
-      expect(load.raw).to eq(complete_load_data)
-    end
-
-    it 'is a new associated model' do
-      expect(RawLoad.find_by(load: load).data).to eq(complete_load_data)
-    end
   end
 
   # rubocop:disable Metrics/MethodLength
