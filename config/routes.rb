@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   root 'loads#index'
-  resources :loads, only: %i[index show destroy]
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  resources :loads, only: %i[index show destroy] do
+    post :shortlist, on: :member
+    post :unshortlist, on: :member
+  end
 end

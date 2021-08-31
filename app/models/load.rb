@@ -28,6 +28,10 @@ class Load < ApplicationRecord
     save(validate: false)
   end
 
+  def shortlisted?
+    shortlisted_at?
+  end
+
   def pickup_location
     Place.new(super)
   end

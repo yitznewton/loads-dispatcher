@@ -27,4 +27,16 @@ module LoadsHelper
                     allowfullscreen: true,
                     src: raw(url)) # rubocop:todo Rails/OutputSafety
   end
+
+  def shortlist_button(load)
+    button_to 'Shortlist', shortlist_load_path(load), class: 'shortlist-button',
+              form_class: ['shortlist-button-form', load.shortlisted? && 'hidden'],
+              remote: true, form: { data: { load_id: load.id } }
+  end
+
+  def unshortlist_button(load)
+    button_to 'Shortlisted', unshortlist_load_path(load), class: 'unshortlist-button',
+              title: 'Click to un-shortlist', form_class: ['unshortlist-button-form', !load.shortlisted? && 'hidden'],
+              remote: true, form: { data: { load_id: load.id } }
+  end
 end

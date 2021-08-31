@@ -11,6 +11,10 @@ table {
   }
 }
 
+.dismiss-button-form, .shortlist-button-form, .unshortlist-button-form {
+  display: inline;
+}
+
 .heavy-left {
   border-left-width: 3px;
 }

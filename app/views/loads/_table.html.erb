@@ -18,8 +18,12 @@
     <tbody>
       <% @loads.each do |l| %>
         <%= content_tag :tr, id: "load_#{l.id}" do -%>
-          <td><%= button_to 'Dismiss', l, method: :delete, form_class: 'dismiss-button-form', remote: true,
-                            form: { data: { load_id: l.id } } %></td>
+          <td nowrap>
+            <%= button_to 'Dismiss', l, method: :delete, class: 'dismiss-button', form_class: 'dismiss-button-form', remote: true,
+                            form: { data: { load_id: l.id } } %>
+            <%= shortlist_button(l) %>
+            <%= unshortlist_button(l) %>
+          </td>
           <td><%= link_to(l.pickup_date.strftime('%a %-m/%-d %H:%M'), l) %></td>
           <td><%= l.pickup_location %></td>
           <td><%= l.dropoff_date&.strftime('%a %-m/%-d %H:%M') %></td>

@@ -1,5 +1,6 @@
 class LoadsController < ApplicationController
   protect_from_forgery except: %i[destroy]
+  before_action :load_resource, only: %i[show destroy shortlist unshortlist]
 
   # rubocop:disable Metrics/MethodLength
   def index
@@ -19,11 +20,10 @@ class LoadsController < ApplicationController
   # rubocop:enable Metrics/MethodLength
 
   def show
-    @load = Load.find(params[:id])
   end
 
   def destroy
-    Load.find(params[:id]).dismiss!
+    @load.dismiss!
 
     respond_to do |format|
       format.json do
@@ -31,6 +31,26 @@ class LoadsController < ApplicationController
       end
       format.html do
         redirect_to loads_path
+      end
+    end
+  end
+
+  def shortlist
+    @load.update!(shortlisted_at: Time.current)
+
+    respond_to do |format|
+      format.json do
+        head :ok
+      end
+    end
+  end
+
+  def unshortlist
+    @load.update!(shortlisted_at: nil)
+
+    respond_to do |format|
+      format.json do
+        head :ok
       end
     end
   end
@@ -44,4 +64,10 @@ class LoadsController < ApplicationController
     (params[:latest_pickup].presence || Time.current).to_time.end_of_day
   end
   helper_method :latest_pickup
+
+  private
+
+  def load_resource
+    @load = Load.find(params[:id])
+  end
 end
