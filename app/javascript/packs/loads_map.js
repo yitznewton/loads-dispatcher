@@ -21,8 +21,8 @@ loader.load().then(() => {
       map = new google.maps.Map(document.getElementById("map"));
       let markers = [];
 
-      // json.slice(0, 10).forEach(load => {
-      json.forEach(load => {
+      json.slice(0, 10).forEach(load => {
+      // json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
@@ -30,7 +30,7 @@ loader.load().then(() => {
         const weightMultiplier = load.equipment_type_code === 'SB' ? 2 : 1;
         const strokeColor = load.equipment_type_code === 'SB' ? '#000' : '#666';
 
-        const listener = (strokeWeight) => () => {
+        const emboldenListener = (strokeWeight) => () => {
           line.setOptions({strokeWeight: strokeWeight, icons: icons(strokeWeight)});
         };
 
@@ -61,18 +61,32 @@ loader.load().then(() => {
           strokeColor: strokeColor,
           map: map
         });
+        const infoWindowContent3 = load.rate && `${load.rate} - ${load.rate_per_mile} per mile` || '';
+        const infoWindowContent = `
+          <div><a href="/loads/${load.id}">${title}</a></div>
+          <div>${load.distance} mi</div>
+          <div>${infoWindowContent3}</div>
+        `;
+        const infoWindow = new google.maps.InfoWindow({
+          // TODO: pass link to load via API
+          content: infoWindowContent,
+          disableAutoPan: true
+        });
         document.addEventListener(`load:${load.id}:delete`, () => {
           markerA.setMap(null);
           markerB.setMap(null);
           line.setMap(null);
         });
-        // line.addListener('mouseover', function(e) {
-        //   // TODO: overlay with origin and destination names & other info
-        //   this.setOptions({strokeWeight: 2, icons: icons(2)});
-        // });
         [line, markerA, markerB].forEach(obj => {
-          obj.addListener('mouseover', listener(weightMultiplier*2));
-          obj.addListener('mouseout', listener(weightMultiplier));
+          obj.addListener('mouseover', emboldenListener(weightMultiplier*2));
+          obj.addListener('mouseout', emboldenListener(weightMultiplier));
+          obj.addListener('mouseover', (evt) => {
+            infoWindow.setPosition(evt.latLng);
+            infoWindow.open({
+              map: map
+            })
+          });
+          obj.addListener('mouseout', () => infoWindow.close());
         });
       });
       map.setCenter(bounds.getCenter());

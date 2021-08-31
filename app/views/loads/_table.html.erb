@@ -6,7 +6,6 @@
         <th colspan="2">Pickup</th>
         <th colspan="2">Dropoff</th>
         <th>Weight</th>
-        <th>Len</th>
         <th>Eqp</th>
         <th>Distance</th>
         <th>Rate</th>
@@ -22,16 +21,15 @@
         <tr>
           <td><%= button_to 'Dismiss', l, method: :delete, form_class: 'dismiss-button-form', remote: true,
                             form: { data: { load_id: l.id } } %></td>
-          <td><%= link_to(l.pickup_date.strftime('%-m/%-d %H:%M'), l) %></td>
+          <td><%= link_to(l.pickup_date.strftime('%a %-m/%-d %H:%M'), l) %></td>
           <td><%= l.pickup_location %></td>
-          <td><%= l.dropoff_date&.strftime('%-m/%-d %H:%M') %></td>
+          <td><%= l.dropoff_date&.strftime('%a %-m/%-d %H:%M') %></td>
           <td><%= l.dropoff_location %></td>
           <td><%= number_with_delimiter(l.weight) %></td>
-          <td><%= l.length && "#{l.length}'" %></td>
           <td><%= content_tag 'span', title: l.equipment_type do %>
                 <%= l.equipment_type_code %>
               <% end %></td>
-          <td><%= l.distance %></td>
+          <td><%= l.distance %> mi</td>
           <td><%= currency(l.rate, show_cents: false) %></td>
           <td><%= currency(l.rate_per_mile) %></td>
           <td><%= l.broker_company %></td>

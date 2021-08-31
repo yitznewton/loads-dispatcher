@@ -1,0 +1,16 @@
+<table>
+  <tbody>
+  <% (0...((100..800).step(10).to_a.length / 5)).each do |i| %>
+    <%= content_tag(:tr) do -%>
+      <% (0...5).each do |j| %>
+        <% rate = (100..800).step(10).to_a[i + (100..800).step(10).to_a.length/ 5 * j] %>
+        <% next_rate = (100..800).step(10).to_a[i + (100..800).step(10).to_a.length/ 5 * j + 1] %>
+        <% shaded = rate.between?(300, 500) %>
+        <% in_range = @load.rate_per_mile&.between?(rate, next_rate) %>
+        <%= content_tag(:td, number_with_precision(rate.to_f/100, precision: 2), class: ['heavy-left', shaded && 'shaded', in_range && 'in-range']) %>
+        <%= content_tag(:td, number_with_precision(load.distance * rate.to_f/100, precision: 0), class: ['heavy-right', shaded && 'shaded', in_range && 'in-range']) %>
+      <% end %>
+    <% end -%>
+  <% end %>
+  </tbody>
+</table>
