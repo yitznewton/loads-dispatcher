@@ -22,6 +22,7 @@ class Load < ApplicationRecord
   validate :no_nyc_long_island
 
   scope :active, -> { joins(:load_identifier).where(dismissed_at: nil).merge(LoadIdentifier.active) }
+  scope :shortlisted, -> { where.not(shortlisted_at: nil) }
 
   def dismiss!
     self.dismissed_at = Time.current

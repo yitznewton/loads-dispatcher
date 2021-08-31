@@ -10,6 +10,8 @@ class LoadsController < ApplicationController
                  .where('pickup_date < ?', latest_pickup)
                  .order(:pickup_date)
 
+    @loads = @loads.shortlisted if shortlist?
+
     respond_to do |format|
       format.html
       format.json do
@@ -64,6 +66,11 @@ class LoadsController < ApplicationController
     (params[:latest_pickup].presence || Time.current).to_time.end_of_day
   end
   helper_method :latest_pickup
+
+  def shortlist?
+    params[:shortlisted].present?
+  end
+  helper_method :shortlist?
 
   private
 

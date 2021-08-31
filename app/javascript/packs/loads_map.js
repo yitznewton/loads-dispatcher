@@ -10,7 +10,8 @@ const loader = new Loader({
 
 const urlParams = new URLSearchParams({
   earliest_pickup: document.getElementById("earliest-pickup").dataset.date || '',
-  latest_pickup: document.getElementById("latest-pickup").dataset.date || ''
+  latest_pickup: document.getElementById("latest-pickup").dataset.date || '',
+  shortlisted: document.getElementById("shortlisted").dataset.shortlisted || ''
 })
 
 const dismissLoad = load => evt => {
