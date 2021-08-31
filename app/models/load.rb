@@ -7,6 +7,7 @@ class Load < ApplicationRecord
     dry_van_only: 'dryvanonly',
     no_box_truck: 'noboxtruck',
     no_roll_door: 'norolldoor',
+    no_tow_away: 'towaway',
     dedicated_route: 'dedicationonthislane',
     drop_trailer: 'droptrailer'
   }.freeze
