@@ -11,4 +11,5 @@ class LoadSerializer < ActiveModel::Serializer
   attribute(:shortlisted) { object.shortlisted_at? }
   attribute(:is_old) { object.old? }
   attribute(:is_box_truck) { object.box_truck? }
+  attribute(:is_high_rate) { object.high_rate? }
 end

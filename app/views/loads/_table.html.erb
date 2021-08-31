@@ -36,7 +36,7 @@
           <% end %>
           <td><%= l.distance %> mi</td>
           <td><%= currency(l.rate, show_cents: false) %></td>
-          <td><%= currency(l.rate_per_mile) %></td>
+          <%= content_tag :td, currency(l.rate_per_mile), class: l.high_rate? && 'high-rate-load' %>
           <td><%= l.broker_company %></td>
           <td><%= l.reference_number %></td>
           <td><%= l.notes %></td>

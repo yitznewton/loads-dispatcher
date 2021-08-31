@@ -39,6 +39,10 @@ class Load < ApplicationRecord
     hours_old > 18
   end
 
+  def high_rate?
+    rate_per_mile && rate_per_mile > 599
+  end
+
   def box_truck?
     equipment_type_code == EQUIPMENT_TYPE_CODE_BOX_TRUCK
   end

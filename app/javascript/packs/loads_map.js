@@ -34,8 +34,8 @@ const polyLineStrokeColor = load => {
   const orange = '#ff8c00';
   const magenta = '#ff00ff';
 
-  if (load.hours_old > 18) return magenta;
-  if (load.rate_per_mile > 600) return orange;
+  if (load.is_old) return magenta;
+  if (load.is_high_rate) return orange;
   if (load.is_box_truck) return '#000'
 
   return '#666';
@@ -44,9 +44,9 @@ const polyLineStrokeColor = load => {
 const weightMultiplier = load => {
   let multiplier = 1;
 
-  if (load.hours_old > 18) multiplier *= 2;
+  if (load.is_old) multiplier *= 2;
   if (load.is_box_truck) multiplier *= 2;
-  if (load.rate_per_mile > 600) multiplier *= 2;
+  if (load.is_high_rate) multiplier *= 2;
 
   return multiplier;
 };
@@ -63,7 +63,6 @@ loader.load().then(() => {
       // json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
-        const isOld = load.hours_old > 18;
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
         const opacity = load.is_box_truck ? 1.0 : 0.3;
 
@@ -103,7 +102,7 @@ loader.load().then(() => {
         const dismissButtonId = `dismiss-button-${load.id}`;
         const shortlistButtonId = `shortlist-button-${load.id}`
         const shortlistButton = load.shortlisted ? 'Shortlisted' : `<button id="${shortlistButtonId}">Shortlist</button>`;
-        const age = isOld ? `<div>${parseInt(load.hours_old)} hours old</div>` : '';
+        const age = load.is_old ? `<div>${parseInt(load.hours_old)} hours old</div>` : '';
         const infoWindowContent = `
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
