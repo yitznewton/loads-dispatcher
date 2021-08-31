@@ -67,3 +67,4 @@ AllCops:
     - config/puma.rb
     - config/spring.rb
     - db/schema.rb
+    - vendor/**/*
