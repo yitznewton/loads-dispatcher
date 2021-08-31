@@ -1,5 +1,6 @@
 class Load < ApplicationRecord
   MINIMUM_OFFERED_RATE = 100
+  SECONDS_IN_HOUR = 3600
 
   EXCLUDED_NOTES = {
     hazmat: 'hazmat',
@@ -23,6 +24,14 @@ class Load < ApplicationRecord
 
   scope :active, -> { joins(:load_identifier).where(dismissed_at: nil).merge(LoadIdentifier.active) }
   scope :shortlisted, -> { where.not(shortlisted_at: nil) }
+
+  def self.clear_shortlist!
+    update_all(shortlisted_at: nil)
+  end
+
+  def hours_old(current_time = Time.current)
+    (current_time - created_at) / SECONDS_IN_HOUR
+  end
 
   def dismiss!
     self.dismissed_at = Time.current

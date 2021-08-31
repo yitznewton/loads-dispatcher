@@ -4,6 +4,6 @@
 <% end %>
 <%= content_tag :div, id: 'latest-pickup', data: { date: params[:latest_pickup] } do %>
 <% end %>
-<%= content_tag :div, id: 'shortlisted', data: { shortlisted: shortlist? } do %>
+<%= content_tag :div, id: 'shortlisted', data: { shortlisted: shortlist? || '' } do %>
 <% end %>
 <%= javascript_pack_tag 'loads_map.js' %>

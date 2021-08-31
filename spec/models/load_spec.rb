@@ -48,6 +48,14 @@ describe Load do
     end
   end
 
+  it 'calculates age' do
+    created_at = '2021-08-31T12:00:00Z'.to_time
+    current_time = '2021-08-31T13:30:00Z'.to_time
+    load = described_class.new(created_at: created_at)
+
+    expect(load.hours_old(current_time)).to be_within(0.001).of(1.5)
+  end
+
   def base_attributes
     {
       pickup_date: Time.current,
