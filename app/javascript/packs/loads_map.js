@@ -30,6 +30,22 @@ const shortlistLoad = load => function(evt) {
   this.replaceWith(shortlistedText);
 };
 
+const polyLineStrokeColor = load => {
+  if (load.hours_old > 18) return '#ff00ff'; // magenta
+  if (load.equipment_type_code === 'SB') return '#000'
+
+  return '#666';
+};
+
+const weightMultiplier = load => {
+  let multiplier = 1;
+
+  if (load.hours_old > 18) multiplier *= 2;
+  if (load.equipment_type_code === 'SB') multiplier *= 2;
+
+  return multiplier;
+};
+
 loader.load().then(() => {
   fetch('/loads.json?' + urlParams).then(data => {
     data.json().then(json => {
@@ -42,10 +58,9 @@ loader.load().then(() => {
       // json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
+        const isOld = load.hours_old > 18;
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
         const opacity = load.equipment_type_code === 'SB' ? 1.0 : 0.3;
-        const weightMultiplier = load.equipment_type_code === 'SB' ? 2 : 1;
-        const strokeColor = load.equipment_type_code === 'SB' ? '#000' : '#666';
 
         const emboldenListener = (strokeWeight) => () => {
           line.setOptions({strokeWeight: strokeWeight, icons: icons(strokeWeight)});
@@ -68,24 +83,26 @@ loader.load().then(() => {
         markers.push(markerA);
         markers.push(markerB);
         const icons = strokeWeight => (
-          [{icon: {path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, strokeWeight: strokeWeight*weightMultiplier}, offset: '50%'}]
+          [{icon: {path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, strokeWeight: strokeWeight*weightMultiplier(load)}, offset: '50%'}]
         );
         const line = new google.maps.Polyline({
           path: [load.pickup_location, load.dropoff_location],
           icons: icons(1),
           geodesic: true,
-          strokeWeight: weightMultiplier,
-          strokeColor: strokeColor,
+          strokeWeight: weightMultiplier(load),
+          strokeColor: polyLineStrokeColor(load),
           map: map
         });
-        const infoWindowContent3 = load.rate && `${load.rate} - ${load.rate_per_mile} per mile` || '';
+        const infoWindowContent3 = load.rate && `<div>${load.rate} - ${load.rate_per_mile} per mile</div>` || '';
         const dismissButtonId = `dismiss-button-${load.id}`;
         const shortlistButtonId = `shortlist-button-${load.id}`
         const shortlistButton = load.shortlisted ? 'Shortlisted' : `<button id="${shortlistButtonId}">Shortlist</button>`;
+        const age = isOld ? `<div>${parseInt(load.hours_old)} hours old</div>` : '';
         const infoWindowContent = `
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
-          <div>${infoWindowContent3}</div>
+          ${infoWindowContent3}
+          ${age}
           <div>
             <button id="${dismissButtonId}">Dismiss</button>
             ${shortlistButton}
@@ -109,8 +126,8 @@ loader.load().then(() => {
           line.setMap(null);
         });
         [line, markerA, markerB].forEach(obj => {
-          obj.addListener('mouseover', emboldenListener(weightMultiplier*2));
-          obj.addListener('mouseout', emboldenListener(weightMultiplier));
+          obj.addListener('mouseover', emboldenListener(weightMultiplier(load)*2));
+          obj.addListener('mouseout', emboldenListener(weightMultiplier(load)));
           obj.addListener('mouseover', (evt) => {
             infoWindow.setPosition(evt.latLng);
             infoWindow.open({
