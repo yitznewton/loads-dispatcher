@@ -31,7 +31,11 @@ const shortlistLoad = load => function(evt) {
 };
 
 const polyLineStrokeColor = load => {
-  if (load.hours_old > 18) return '#ff00ff'; // magenta
+  const orange = '#ff8c00';
+  const magenta = '#ff00ff';
+
+  if (load.hours_old > 18) return magenta;
+  if (load.rate_per_mile > 600) return orange;
   if (load.equipment_type_code === 'SB') return '#000'
 
   return '#666';
@@ -42,6 +46,7 @@ const weightMultiplier = load => {
 
   if (load.hours_old > 18) multiplier *= 2;
   if (load.equipment_type_code === 'SB') multiplier *= 2;
+  if (load.rate_per_mile > 600) multiplier *= 2;
 
   return multiplier;
 };
@@ -93,7 +98,8 @@ loader.load().then(() => {
           strokeColor: polyLineStrokeColor(load),
           map: map
         });
-        const infoWindowContent3 = load.rate && `<div>${load.rate} - ${load.rate_per_mile} per mile</div>` || '';
+        const curr = x => `$${x/100}`;
+        const infoWindowContent3 = load.rate && `<div>${curr(load.rate)} - ${curr(load.rate_per_mile)} per mile</div>` || '';
         const dismissButtonId = `dismiss-button-${load.id}`;
         const shortlistButtonId = `shortlist-button-${load.id}`
         const shortlistButton = load.shortlisted ? 'Shortlisted' : `<button id="${shortlistButtonId}">Shortlist</button>`;
@@ -102,6 +108,7 @@ loader.load().then(() => {
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
           ${infoWindowContent3}
+          <div>${Number(load.weight).toLocaleString()} lbs</div>
           ${age}
           <div>
             <button id="${dismissButtonId}">Dismiss</button>

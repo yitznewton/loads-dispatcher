@@ -5,7 +5,7 @@ class LoadSerializer < ActiveModel::Serializer
 
   attribute(:pickup_location) { PlaceSerializer.new(object.pickup_location) }
   attribute(:dropoff_location) { PlaceSerializer.new(object.dropoff_location) }
-  attribute(:rate) { currency(object.rate, show_cents: false) }
-  attribute(:rate_per_mile) { currency(object.rate_per_mile) }
+  attribute(:rate) { object.rate }
+  attribute(:rate_per_mile) { object.rate_per_mile }
   attribute(:shortlisted) { object.shortlisted_at? }
 end
