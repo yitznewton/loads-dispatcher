@@ -31,8 +31,12 @@ const shortlistLoad = load => function(evt) {
 };
 
 const polyLineStrokeColor = load => {
-  if (load.hours_old > 18) return '#ff00ff'; // magenta
-  if (load.equipment_type_code === 'SB') return '#000'
+  const orange = '#ff8c00';
+  const magenta = '#ff00ff';
+
+  if (load.is_old) return magenta;
+  if (load.is_high_rate) return orange;
+  if (load.is_box_truck) return '#000'
 
   return '#666';
 };
@@ -40,8 +44,9 @@ const polyLineStrokeColor = load => {
 const weightMultiplier = load => {
   let multiplier = 1;
 
-  if (load.hours_old > 18) multiplier *= 2;
-  if (load.equipment_type_code === 'SB') multiplier *= 2;
+  if (load.is_old) multiplier *= 2;
+  if (load.is_box_truck) multiplier *= 2;
+  if (load.is_high_rate) multiplier *= 2;
 
   return multiplier;
 };
@@ -60,7 +65,7 @@ loader.load().then(() => {
         bounds.extend(load.dropoff_location);
         const isOld = load.hours_old > 18;
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
-        const opacity = load.equipment_type_code === 'SB' ? 1.0 : 0.3;
+        const opacity = load.is_box_truck ? 1.0 : 0.3;
 
         const emboldenListener = (strokeWeight) => () => {
           line.setOptions({strokeWeight: strokeWeight, icons: icons(strokeWeight)});
@@ -93,15 +98,17 @@ loader.load().then(() => {
           strokeColor: polyLineStrokeColor(load),
           map: map
         });
-        const infoWindowContent3 = load.rate && `<div>${load.rate} - ${load.rate_per_mile} per mile</div>` || '';
+        const curr = x => `$${x/100}`;
+        const infoWindowContent3 = load.rate && `<div>${curr(load.rate)} - ${curr(load.rate_per_mile)} per mile</div>` || '';
         const dismissButtonId = `dismiss-button-${load.id}`;
         const shortlistButtonId = `shortlist-button-${load.id}`
         const shortlistButton = load.shortlisted ? 'Shortlisted' : `<button id="${shortlistButtonId}">Shortlist</button>`;
-        const age = isOld ? `<div>${parseInt(load.hours_old)} hours old</div>` : '';
+        const age = load.is_old ? `<div>${parseInt(load.hours_old)} hours old</div>` : '';
         const infoWindowContent = `
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
           ${infoWindowContent3}
+          <div>${Number(load.weight).toLocaleString()} lbs</div>
           ${age}
           <div>
             <button id="${dismissButtonId}">Dismiss</button>

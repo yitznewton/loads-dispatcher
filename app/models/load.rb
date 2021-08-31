@@ -1,12 +1,14 @@
 class Load < ApplicationRecord
   MINIMUM_OFFERED_RATE = 100
   SECONDS_IN_HOUR = 3600
+  EQUIPMENT_TYPE_CODE_BOX_TRUCK = 'SB'.freeze
 
   EXCLUDED_NOTES = {
     hazmat: 'hazmat',
     dry_van_only: 'dryvanonly',
     no_box_truck: 'noboxtruck',
     no_roll_door: 'norolldoor',
+    no_tow_away: 'towaway',
     dedicated_route: 'dedicationonthislane',
     drop_trailer: 'droptrailer'
   }.freeze
@@ -31,6 +33,18 @@ class Load < ApplicationRecord
 
   def hours_old(current_time = Time.current)
     (current_time - created_at) / SECONDS_IN_HOUR
+  end
+
+  def old?
+    hours_old > 18
+  end
+
+  def high_rate?
+    rate_per_mile && rate_per_mile > 599
+  end
+
+  def box_truck?
+    equipment_type_code == EQUIPMENT_TYPE_CODE_BOX_TRUCK
   end
 
   def dismiss!
