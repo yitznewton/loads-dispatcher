@@ -31,6 +31,6 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - bundle exec rubocop
-    - NODE_ENV=test bundle exec rails webpacker:compile
-    - bundle exec rake
+    - run: bundle exec rubocop
+    - run: NODE_ENV=test bundle exec rails webpacker:compile
+    - run: bundle exec rake
