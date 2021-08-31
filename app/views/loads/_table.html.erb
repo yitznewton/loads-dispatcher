@@ -11,7 +11,6 @@
         <th>Rate</th>
         <th>Rate per mile</th>
         <th>Broker</th>
-        <th>Commodity</th>
         <th>Ref</th>
         <th>Notes</th>
       </tr>
@@ -33,7 +32,6 @@
           <td><%= currency(l.rate, show_cents: false) %></td>
           <td><%= currency(l.rate_per_mile) %></td>
           <td><%= l.broker_company %></td>
-          <td><%= l.commodity %></td>
           <td><%= l.reference_number %></td>
           <td><%= l.notes %></td>
         <% end -%>

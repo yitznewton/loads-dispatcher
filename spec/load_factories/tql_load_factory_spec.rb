@@ -52,20 +52,43 @@ describe TqlLoadFactory do
     expect(load.load_identifier.identifier).to eq('ABC123')
   end
 
-  context 'when called again' do
-    context 'with valid data' do
-      it 'updates the existing record when called again' do  # rubocop:disable RSpec/MultipleExpectations
-        described_class.call(complete_load_data.merge('Notes' => 'Bongo'))
-        expect(load.notes).to eq('Bongo')
-        expect(Load.count).to eq(1)
+  describe 'updating' do
+    context 'with invalid data' do
+      it "doesn't create a LoadIdentifier" do
+        updated_data = complete_load_data.merge('Weight' => 0)
+        expect { described_class.call(updated_data) }.not_to(change { LoadIdentifier.count })
+      end
+
+      it "doesn't update the load" do
+        updated_data = complete_load_data.merge('Weight' => 0)
+        expect { described_class.call(updated_data) }.not_to(change { load.rate })
+      end
+
+      it 'removes the load' do
+        updated_data = complete_load_data.merge('Weight' => 0)
+        described_class.call(updated_data)
+        expect(Load.active.count).to eq(0)
       end
     end
 
-    context 'with invalid data' do
-      it 'removes the load' do
-        described_class.call(complete_load_data.merge('Notes' => 'no box trucks'))
-        expect(Load.active.count).to eq(0)
-      end
+    it 'updates the load' do
+      updated_data = complete_load_data.merge('Weight' => 8000)
+      described_class.call(updated_data)
+      expect(load.weight).to eq(8000)
+    end
+
+    it "doesn't create duplicates" do
+      expect { described_class.call(complete_load_data) }.not_to(change { Load.count })
+    end
+  end
+
+  describe 'raw data' do
+    it 'is attached to the load' do
+      expect(load.raw).to eq(complete_load_data)
+    end
+
+    it 'is a new associated model' do
+      expect(RawLoad.find_by(load: load).data).to eq(complete_load_data)
     end
   end
 

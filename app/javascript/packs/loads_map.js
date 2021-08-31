@@ -13,6 +13,14 @@ const urlParams = new URLSearchParams({
   latest_pickup: document.getElementById("latest-pickup").dataset.date || ''
 })
 
+const dismissLoad = load => evt => {
+  evt.stopPropagation();
+  fetch(`/loads/${load.id}.json`, {method: 'DELETE'}).then(() => {
+    const deleteEvent = new Event(`load:${load.id}:delete`);
+    document.dispatchEvent(deleteEvent);
+  });
+};
+
 loader.load().then(() => {
   fetch('/loads.json?' + urlParams).then(data => {
     data.json().then(json => {
@@ -21,8 +29,8 @@ loader.load().then(() => {
       map = new google.maps.Map(document.getElementById("map"));
       let markers = [];
 
-      // json.slice(0, 10).forEach(load => {
-      json.forEach(load => {
+      json.slice(0, 10).forEach(load => {
+      // json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
@@ -62,16 +70,21 @@ loader.load().then(() => {
           map: map
         });
         const infoWindowContent3 = load.rate && `${load.rate} - ${load.rate_per_mile} per mile` || '';
+        const dismissButtonId = `dismiss-button-${load.id}`;
         const infoWindowContent = `
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
           <div>${infoWindowContent3}</div>
+          <div><button id="${dismissButtonId}">Dismiss</button></div>
           <div><a href="#load_${load.id}">scroll up</a></div>
         `;
         const infoWindow = new google.maps.InfoWindow({
           // TODO: pass link to load via API
           content: infoWindowContent,
           disableAutoPan: true
+        });
+        google.maps.event.addListener(infoWindow, 'domready', function() {
+          document.getElementById(dismissButtonId).addEventListener('click', dismissLoad(load));
         });
         document.addEventListener(`load:${load.id}:delete`, () => {
           markerA.setMap(null);

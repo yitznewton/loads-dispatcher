@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_30_165913) do
+ActiveRecord::Schema.define(version: 2021_08_31_133120) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -86,6 +86,8 @@ ActiveRecord::Schema.define(version: 2021_08_30_165913) do
     t.datetime "dismissed_at"
     t.string "equipment_type"
     t.string "equipment_type_code"
+    t.string "pickup_details"
+    t.string "dropoff_details"
     t.index ["broker_company_id"], name: "index_loads_on_broker_company_id"
     t.index ["load_identifier_id"], name: "index_loads_on_load_identifier_id"
   end
@@ -99,9 +101,18 @@ ActiveRecord::Schema.define(version: 2021_08_30_165913) do
     t.index ["origin", "destination"], name: "index_places_distances_on_origin_and_destination", unique: true
   end
 
+  create_table "raw_loads", force: :cascade do |t|
+    t.json "data"
+    t.integer "load_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["load_id"], name: "index_raw_loads_on_load_id"
+  end
+
   add_foreign_key "broker_company_identifiers", "broker_companies"
   add_foreign_key "broker_company_identifiers", "load_boards"
   add_foreign_key "load_identifiers", "load_boards"
   add_foreign_key "loads", "broker_companies"
   add_foreign_key "loads", "load_identifiers", on_delete: :cascade
+  add_foreign_key "raw_loads", "loads"
 end

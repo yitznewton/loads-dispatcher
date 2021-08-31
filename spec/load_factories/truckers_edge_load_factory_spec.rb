@@ -91,8 +91,38 @@ describe TruckersEdgeLoadFactory do
     expect(load.load_identifier.identifier).to eq('ABC123')
   end
 
-  it "doesn't create duplicates when called again" do
-    expect { described_class.call(complete_load_data) }.not_to(change { Load.count })
+  describe 'updating' do
+    context 'with invalid data' do
+      it "doesn't create a LoadIdentifier" do
+        updated_data = complete_load_data.merge('rate' => 1)
+        expect { described_class.call(updated_data) }.not_to(change { LoadIdentifier.count })
+      end
+
+      it "doesn't update the load" do
+        updated_data = complete_load_data.merge('rate' => 1)
+        expect { described_class.call(updated_data) }.not_to(change { load.rate })
+      end
+    end
+
+    it 'updates the load' do
+      updated_data = complete_load_data.merge('rate' => 800)
+      described_class.call(updated_data)
+      expect(load.rate).to eq(80000)
+    end
+
+    it "doesn't create duplicates" do
+      expect { described_class.call(complete_load_data) }.not_to(change { Load.count })
+    end
+  end
+
+  describe 'raw data' do
+    it 'is attached to the load' do
+      expect(load.raw).to eq(complete_load_data)
+    end
+
+    it 'is a new associated model' do
+      expect(RawLoad.find_by(load: load).data).to eq(complete_load_data)
+    end
   end
 
   # rubocop:disable Metrics/MethodLength

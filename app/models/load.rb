@@ -6,6 +6,7 @@ class Load < ApplicationRecord
     dry_van_only: 'dryvanonly',
     no_box_truck: 'noboxtruck',
     no_roll_door: 'norolldoor',
+    dedicated_route: 'dedicationonthislane',
     drop_trailer: 'droptrailer'
   }.freeze
 
@@ -23,7 +24,8 @@ class Load < ApplicationRecord
   scope :active, -> { joins(:load_identifier).where(dismissed_at: nil).merge(LoadIdentifier.active) }
 
   def dismiss!
-    update!(dismissed_at: Time.current)
+    self.dismissed_at = Time.current
+    save(validate: false)
   end
 
   def pickup_location

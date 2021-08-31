@@ -1,4 +1,6 @@
 class LoadsController < ApplicationController
+  protect_from_forgery except: %i[destroy]
+
   # rubocop:disable Metrics/MethodLength
   def index
     @loads = Load.active

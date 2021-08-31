@@ -30,8 +30,7 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
       broker_company: broker_company_identifier.broker_company,
       notes: load_data['comments']&.join('. '),
       equipment_type: load_data['equipmentType'],
-      equipment_type_code: load_data['equipmentTypeCode'],
-      raw: load_data
+      equipment_type_code: load_data['equipmentTypeCode']
     }
   end
   # rubocop:enable Metrics/AbcSize

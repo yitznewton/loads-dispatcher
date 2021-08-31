@@ -23,8 +23,7 @@ class TqlLoadFactory < BaseLoadFactory
       dropoff_date: Time.strptime(load_data.fetch('DeliveryDate'), TIME_TEMPLATE),
       commodity: load_data['CommoditySummary'],
       notes: load_data.fetch('Notes'),
-      broker_company: broker_company,
-      raw: load_data
+      broker_company: broker_company
     }
   end
   # rubocop:enable Metrics/AbcSize
