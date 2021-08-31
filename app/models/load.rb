@@ -28,7 +28,7 @@ class Load < ApplicationRecord
   scope :shortlisted, -> { where.not(shortlisted_at: nil) }
 
   def self.clear_shortlist!
-    update_all(shortlisted_at: nil)
+    update_all(shortlisted_at: nil) # rubocop:todo Rails/SkipsModelValidations
   end
 
   def hours_old(current_time = Time.current)

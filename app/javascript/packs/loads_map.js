@@ -63,6 +63,7 @@ loader.load().then(() => {
       // json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
+        const isOld = load.hours_old > 18;
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
         const opacity = load.is_box_truck ? 1.0 : 0.3;
 
