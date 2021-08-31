@@ -1,5 +1,5 @@
 class LoadsController < ApplicationController
-  protect_from_forgery except: %i[destroy]
+  protect_from_forgery except: %i[destroy shortlist]
   before_action :load_resource, only: %i[show destroy shortlist unshortlist]
 
   # rubocop:disable Metrics/MethodLength

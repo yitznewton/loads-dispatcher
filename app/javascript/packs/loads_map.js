@@ -21,6 +21,14 @@ const dismissLoad = load => evt => {
   });
 };
 
+const shortlistLoad = load => function(evt) {
+  evt.stopPropagation();
+  fetch(`/loads/${load.id}/shortlist.json`, {method: 'POST'});
+  const shortlistedText = document.createElement('span');
+  shortlistedText.textContent = 'Shortlisted';
+  this.replaceWith(shortlistedText);
+};
+
 loader.load().then(() => {
   fetch('/loads.json?' + urlParams).then(data => {
     data.json().then(json => {
@@ -71,11 +79,16 @@ loader.load().then(() => {
         });
         const infoWindowContent3 = load.rate && `${load.rate} - ${load.rate_per_mile} per mile` || '';
         const dismissButtonId = `dismiss-button-${load.id}`;
+        const shortlistButtonId = `shortlist-button-${load.id}`
+        const shortlistButton = load.shortlisted ? 'Shortlisted' : `<button id="${shortlistButtonId}">Shortlist</button>`;
         const infoWindowContent = `
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
           <div>${infoWindowContent3}</div>
-          <div><button id="${dismissButtonId}">Dismiss</button></div>
+          <div>
+            <button id="${dismissButtonId}">Dismiss</button>
+            ${shortlistButton}
+          </div>
           <div><a href="#load_${load.id}">scroll up</a></div>
         `;
         const infoWindow = new google.maps.InfoWindow({
@@ -85,6 +98,9 @@ loader.load().then(() => {
         });
         google.maps.event.addListener(infoWindow, 'domready', function() {
           document.getElementById(dismissButtonId).addEventListener('click', dismissLoad(load));
+
+          const shortlistButton = document.getElementById(shortlistButtonId);
+          shortlistButton && shortlistButton.addEventListener('click', shortlistLoad(load));
         });
         document.addEventListener(`load:${load.id}:delete`, () => {
           markerA.setMap(null);
