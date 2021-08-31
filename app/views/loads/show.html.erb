@@ -1,21 +1,21 @@
 <% content_for(:page_title, "Load: #{@load.pickup_location} to #{@load.dropoff_location}") %>
 
-<%= load_map %>
+<%= load_map(@load) %>
 
 <%= button_to 'Dismiss', @load, method: :delete %>
 
 <dl>
-  <%= load_field "#{@load.pickup_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.pickup_location}", 'Pickup' %>
-  <%= load_field "#{@load.dropoff_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.dropoff_location}", 'Dropoff' %>
-  <%= load_field :broker_company, 'Broker company' %>
-  <%= load_field :reference_number %>
-  <%= load_field number_with_delimiter(@load.weight), 'Weight' %>
-  <%= load_field :length %>
-  <%= load_field @load.equipment_type && "#{@load.equipment_type_code} - #{@load.equipment_type}", 'Equipment' %>
-  <%= load_field "#{@load.distance} mi", 'Distance' %>
-  <%= load_field currency(@load.rate, show_cents: false), 'Rate' %>
-  <%= load_field currency(@load.rate_per_mile), 'Rate per mile' %>
-  <%= load_field :notes %>
+  <%= load_field @load, "#{@load.pickup_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.pickup_location}", 'Pickup' %>
+  <%= load_field @load, "#{@load.dropoff_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.dropoff_location}", 'Dropoff' %>
+  <%= load_field @load, :broker_company, 'Broker company' %>
+  <%= load_field @load, :reference_number %>
+  <%= load_field @load, number_with_delimiter(@load.weight), 'Weight' %>
+  <%= load_field @load, :length %>
+  <%= load_field @load, @load.equipment_type && "#{@load.equipment_type_code} - #{@load.equipment_type}", 'Equipment' %>
+  <%= load_field @load, "#{@load.distance} mi", 'Distance' %>
+  <%= load_field @load, currency(@load.rate, show_cents: false), 'Rate' %>
+  <%= load_field @load, currency(@load.rate_per_mile), 'Rate per mile' %>
+  <%= load_field @load, :notes %>
 
   <%= content_tag :dt, 'Rates' %>
   <%= content_tag :dd do -%>

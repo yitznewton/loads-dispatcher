@@ -20,7 +20,7 @@ class Load < ApplicationRecord
   validate :no_excluded_notes
   validate :no_nyc_long_island
 
-  scope :active, -> { where(dismissed_at: nil) }
+  scope :active, -> { joins(:load_identifier).where(dismissed_at: nil).merge(LoadIdentifier.active) }
 
   def dismiss!
     update!(dismissed_at: Time.current)

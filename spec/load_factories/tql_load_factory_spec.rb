@@ -62,9 +62,9 @@ describe TqlLoadFactory do
     end
 
     context 'with invalid data' do
-      it 'destroys the load model' do
+      it 'removes the load' do
         described_class.call(complete_load_data.merge('Notes' => 'no box trucks'))
-        expect(Load.count).to eq(0)
+        expect(Load.active.count).to eq(0)
       end
     end
   end

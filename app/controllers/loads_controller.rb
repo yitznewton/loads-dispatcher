@@ -1,7 +1,7 @@
 class LoadsController < ApplicationController
+  # rubocop:disable Metrics/MethodLength
   def index
     @loads = Load.active
-                 .joins(:load_identifier).merge(LoadIdentifier.active)
                  .includes(:broker_company)
                  .where('pickup_date > ?', earliest_pickup)
                  .where('pickup_date < ?', latest_pickup)
@@ -14,6 +14,7 @@ class LoadsController < ApplicationController
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def show
     @load = Load.find(params[:id])

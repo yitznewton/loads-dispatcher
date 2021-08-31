@@ -43,6 +43,9 @@ Style/FrozenStringLiteralComment:
 Style/Lambda:
   Enabled: false
 
+Style/NegatedIf:
+  Enabled: false
+
 Style/NumericLiterals:
   Exclude:
     - db/seeds.rb

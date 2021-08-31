@@ -7,24 +7,24 @@ module LoadsHelper
     show_cents ? "$#{whole_dollars}.#{cents}" : "$#{whole_dollars}"
   end
 
-  def load_field(key, label=nil)
-    value = key.is_a?(Symbol) ? @load.send(key) : key
+  def load_field(load, key, label = nil)
+    value = key.is_a?(Symbol) ? load.send(key) : key
     label = key.to_s.humanize if !label
 
-    content_tag(:dt, label) + content_tag(:dd, value)
+    tag.dt(label) + tag.dd(value)
   end
 
-  def load_map
-    origin = "#{@load.pickup_location.latitude},#{@load.pickup_location.longitude}"
-    destination = "#{@load.dropoff_location.latitude},#{@load.dropoff_location.longitude}"
+  def load_map(load)
+    origin = "#{load.pickup_location.latitude},#{load.pickup_location.longitude}"
+    destination = "#{load.dropoff_location.latitude},#{load.dropoff_location.longitude}"
     url = "https://www.google.com/maps/embed/v1/directions?origin=#{origin}&destination=#{destination}" \
           "&key=#{ENV['GOOGLE_MAPS_API_KEY']}"
 
-    content_tag(:iframe, nil, width: 800,
-                height: 400,
-                style: 'border: 0;',
-                loading: :lazy,
-                allowfullscreen: true,
-                src: raw(url))
+    tag.iframe(nil, width: 800,
+                              height: 400,
+                              style: 'border: 0;',
+                              loading: :lazy,
+                              allowfullscreen: true,
+                              src: raw(url)) # rubocop:todo Rails/OutputSafety
   end
 end
