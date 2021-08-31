@@ -18,7 +18,7 @@
     </thead>
     <tbody>
       <% @loads.each do |l| %>
-        <tr>
+        <%= content_tag :tr, id: "load_#{l.id}" do -%>
           <td><%= button_to 'Dismiss', l, method: :delete, form_class: 'dismiss-button-form', remote: true,
                             form: { data: { load_id: l.id } } %></td>
           <td><%= link_to(l.pickup_date.strftime('%a %-m/%-d %H:%M'), l) %></td>
@@ -36,7 +36,7 @@
           <td><%= l.commodity %></td>
           <td><%= l.reference_number %></td>
           <td><%= l.notes %></td>
-        </tr>
+        <% end -%>
       <% end %>
     </tbody>
   </table>

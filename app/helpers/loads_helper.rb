@@ -21,10 +21,10 @@ module LoadsHelper
           "&key=#{ENV['GOOGLE_MAPS_API_KEY']}"
 
     tag.iframe(nil, width: 800,
-                              height: 400,
-                              style: 'border: 0;',
-                              loading: :lazy,
-                              allowfullscreen: true,
-                              src: raw(url)) # rubocop:todo Rails/OutputSafety
+                    height: 400,
+                    style: 'border: 0;',
+                    loading: :lazy,
+                    allowfullscreen: true,
+                    src: raw(url)) # rubocop:todo Rails/OutputSafety
   end
 end

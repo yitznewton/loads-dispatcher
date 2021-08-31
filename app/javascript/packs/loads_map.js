@@ -21,8 +21,8 @@ loader.load().then(() => {
       map = new google.maps.Map(document.getElementById("map"));
       let markers = [];
 
-      json.slice(0, 10).forEach(load => {
-      // json.forEach(load => {
+      // json.slice(0, 10).forEach(load => {
+      json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
@@ -66,6 +66,7 @@ loader.load().then(() => {
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
           <div>${infoWindowContent3}</div>
+          <div><a href="#load_${load.id}">scroll up</a></div>
         `;
         const infoWindow = new google.maps.InfoWindow({
           // TODO: pass link to load via API
