@@ -29,11 +29,11 @@
           <td><%= l.pickup_location %></td>
           <td><%= l.dropoff_date&.strftime('%a %-m/%-d %H:%M') %></td>
           <td><%= l.dropoff_location %></td>
-          <%= content_tag :td, l.hours_old.to_i, class: l.hours_old > 18 && 'old-load' %>
+          <%= content_tag :td, l.hours_old.to_i, class: l.old? && 'old-load' %>
           <td><%= number_with_delimiter(l.weight) %></td>
-          <td><%= content_tag 'span', title: l.equipment_type do %>
-                <%= l.equipment_type_code %>
-              <% end %></td>
+          <%= content_tag :td, class: l.box_truck? && 'box-truck-load' do %>
+            <%= l.equipment_type_code %>
+          <% end %>
           <td><%= l.distance %> mi</td>
           <td><%= currency(l.rate, show_cents: false) %></td>
           <td><%= currency(l.rate_per_mile) %></td>

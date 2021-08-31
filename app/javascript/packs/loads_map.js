@@ -36,7 +36,7 @@ const polyLineStrokeColor = load => {
 
   if (load.hours_old > 18) return magenta;
   if (load.rate_per_mile > 600) return orange;
-  if (load.equipment_type_code === 'SB') return '#000'
+  if (load.is_box_truck) return '#000'
 
   return '#666';
 };
@@ -45,7 +45,7 @@ const weightMultiplier = load => {
   let multiplier = 1;
 
   if (load.hours_old > 18) multiplier *= 2;
-  if (load.equipment_type_code === 'SB') multiplier *= 2;
+  if (load.is_box_truck) multiplier *= 2;
   if (load.rate_per_mile > 600) multiplier *= 2;
 
   return multiplier;
@@ -65,7 +65,7 @@ loader.load().then(() => {
         bounds.extend(load.dropoff_location);
         const isOld = load.hours_old > 18;
         const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
-        const opacity = load.equipment_type_code === 'SB' ? 1.0 : 0.3;
+        const opacity = load.is_box_truck ? 1.0 : 0.3;
 
         const emboldenListener = (strokeWeight) => () => {
           line.setOptions({strokeWeight: strokeWeight, icons: icons(strokeWeight)});
