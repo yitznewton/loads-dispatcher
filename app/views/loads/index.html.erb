@@ -6,7 +6,7 @@
 <% if shortlist? %>
   <div><%= link_to 'All loads', loads_path %></div>
 <% else %>
-  <div><%= link_to 'Shortlist', loads_path(shortlisted: true) %></div>
+  <div><%= link_to 'Shortlist', shortlist_loads_path %></div>
 <% end %>
 
 <%= render 'table' %>

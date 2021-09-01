@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post :shortlist, on: :member
     post :unshortlist, on: :member
 
+    get :shortlist, action: :shortlisted, on: :collection
     post :show_maps, on: :collection
     post :hide_maps, on: :collection
   end
