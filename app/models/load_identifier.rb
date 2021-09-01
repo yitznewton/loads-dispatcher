@@ -7,8 +7,4 @@ class LoadIdentifier < ApplicationRecord
   def destroy
     update(deleted_at: Time.current)
   end
-
-  def destroy!
-    update!(deleted_at: Time.current)
-  end
 end
