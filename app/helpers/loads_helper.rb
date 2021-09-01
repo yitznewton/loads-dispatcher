@@ -54,8 +54,11 @@ module LoadsHelper
       Have a great day!
       --
       Peter Holmes, Dispatcher
-      Milton Morley Transport
       973-572-7541
+
+      Milton Morley Transport
+      USDOT 3707404
+      MC 1299745
     EOF
   end
 
