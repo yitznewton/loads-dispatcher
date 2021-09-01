@@ -1,8 +1,12 @@
 <% content_for(:page_title, "Load: #{@load.pickup_location} to #{@load.dropoff_location}") %>
 
-<%= load_map(@load) %>
+<%= load_map(@load) unless @hide_maps %>
 
-<%= button_to 'Dismiss', @load, method: :delete %>
+<div class="show-load-map-toggle-button"><%= render 'map_toggle_button' %></div>
+
+<p><%= link_to 'Back to loads', loads_path %></p>
+
+<%= button_to 'Dismiss load', @load, method: :delete %>
 
 <dl>
   <%= load_field @load, "#{@load.pickup_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.pickup_location}", 'Pickup' %>
