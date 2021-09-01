@@ -1,29 +1,30 @@
-import {Loader} from "@googlemaps/js-api-loader"
+import { Loader } from '@googlemaps/js-api-loader';
 
 let map;
 
 const loader = new Loader({
-  apiKey: document.getElementById("google-maps-api-key").dataset.key,
-  version: "weekly",
-  libraries: []
-})
+  apiKey: document.getElementById('google-maps-api-key').dataset.key,
+  version: 'weekly',
+  libraries: [],
+});
 
-let loadsUrl, urlParams;
+let loadsUrl;
+let urlParams;
 
-if (document.getElementById("shortlisted").dataset.shortlisted) {
+if (document.getElementById('shortlisted').dataset.shortlisted) {
   loadsUrl = '/loads/shortlist.json';
   urlParams = new URLSearchParams();
 } else {
   loadsUrl = '/loads.json';
   urlParams = new URLSearchParams({
-    earliest_pickup: document.getElementById("earliest-pickup").dataset.date || '',
-    latest_pickup: document.getElementById("latest-pickup").dataset.date || ''
-  })
+    earliest_pickup: document.getElementById('earliest-pickup').dataset.date || '',
+    latest_pickup: document.getElementById('latest-pickup').dataset.date || '',
+  });
 }
 
-const dismissLoad = load => evt => {
+const dismissLoad = (load) => (evt) => {
   evt.stopPropagation();
-  fetch(`/loads/${load.id}.json`, {method: 'DELETE'}).then((response) => {
+  fetch(`/loads/${load.id}.json`, { method: 'DELETE' }).then((response) => {
     if (response.status !== 200) {
       return;
     }
@@ -32,9 +33,9 @@ const dismissLoad = load => evt => {
   });
 };
 
-const shortlistLoad = load => function(evt) {
+const shortlistLoad = (load) => function (evt) {
   evt.stopPropagation();
-  fetch(`/loads/${load.id}/shortlist.json`, {method: 'POST'}).then((response) => {
+  fetch(`/loads/${load.id}/shortlist.json`, { method: 'POST' }).then((response) => {
     if (response.status !== 200) {
       return;
     }
@@ -44,18 +45,18 @@ const shortlistLoad = load => function(evt) {
   });
 };
 
-const polyLineStrokeColor = load => {
+const polyLineStrokeColor = (load) => {
   const orange = '#ff8c00';
   const magenta = '#ff00ff';
 
   if (load.is_old) return magenta;
   if (load.is_high_rate) return orange;
-  if (load.is_box_truck) return '#000'
+  if (load.is_box_truck) return '#000';
 
   return '#666';
 };
 
-const weightMultiplier = load => {
+const weightMultiplier = (load) => {
   let multiplier = 1;
 
   if (load.is_old) multiplier *= 2;
@@ -66,43 +67,22 @@ const weightMultiplier = load => {
 };
 
 loader.load().then(() => {
-  fetch(loadsUrl + urlParams).then(data => {
-    data.json().then(json => {
+  fetch(`${loadsUrl}?${urlParams}`).then((data) => {
+    data.json().then((json) => {
       const bounds = new google.maps.LatLngBounds();
 
-      map = new google.maps.Map(document.getElementById("map"));
-      let markers = [];
+      map = new google.maps.Map(document.getElementById('map'));
+      const markers = [];
 
       // json.slice(0, 10).forEach(load => {
-      json.forEach(load => {
+      json.forEach((load) => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
-        const isOld = load.hours_old > 18;
-        const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`
+        const title = `${load.pickup_location.readable} to ${load.dropoff_location.readable}`;
         const opacity = load.is_box_truck ? 1.0 : 0.3;
 
-        const emboldenListener = (strokeWeight) => () => {
-          line.setOptions({strokeWeight: strokeWeight, icons: icons(strokeWeight)});
-        };
-
-        const markerA = new google.maps.Marker({
-          position: load.pickup_location,
-          map,
-          opacity: opacity,
-          label: "A",
-          title: title
-        });
-        const markerB = new google.maps.Marker({
-          position: load.dropoff_location,
-          map,
-          opacity: opacity,
-          label: "B",
-          title: title
-        });
-        markers.push(markerA);
-        markers.push(markerB);
-        const icons = strokeWeight => (
-          [{icon: {path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, strokeWeight: strokeWeight*weightMultiplier(load)}, offset: '50%'}]
+        const icons = (strokeWeight) => (
+          [{ icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, scale: 3, strokeWeight: strokeWeight * weightMultiplier(load) }, offset: '50%' }]
         );
         const line = new google.maps.Polyline({
           path: [load.pickup_location, load.dropoff_location],
@@ -110,14 +90,34 @@ loader.load().then(() => {
           geodesic: true,
           strokeWeight: weightMultiplier(load),
           strokeColor: polyLineStrokeColor(load),
-          map: map
+          map,
         });
-        const curr = x => `$${x/100}`;
-        const infoWindowContent3 = load.rate && `<div>${curr(load.rate)} - ${curr(load.rate_per_mile)} per mile</div>` || '';
+        const emboldenListener = (strokeWeight) => () => {
+          line.setOptions({ strokeWeight, icons: icons(strokeWeight) });
+        };
+
+        const markerA = new google.maps.Marker({
+          position: load.pickup_location,
+          map,
+          opacity,
+          label: 'A',
+          title,
+        });
+        const markerB = new google.maps.Marker({
+          position: load.dropoff_location,
+          map,
+          opacity,
+          label: 'B',
+          title,
+        });
+        markers.push(markerA);
+        markers.push(markerB);
+        const curr = (x) => `$${x / 100}`;
+        const infoWindowContent3 = (load.rate && `<div>${curr(load.rate)} - ${curr(load.rate_per_mile)} per mile</div>`) || '';
         const dismissButtonId = `dismiss-button-${load.id}`;
-        const shortlistButtonId = `shortlist-button-${load.id}`
+        const shortlistButtonId = `shortlist-button-${load.id}`;
         const shortlistButton = load.shortlisted ? 'Shortlisted' : `<button id="${shortlistButtonId}">Shortlist</button>`;
-        const age = load.is_old ? `<div>${parseInt(load.hours_old)} hours old</div>` : '';
+        const age = load.is_old ? `<div>${parseInt(load.hours_old, 10)} hours old</div>` : '';
         const infoWindowContent = `
           <div><a href="/loads/${load.id}">${title}</a></div>
           <div>${load.distance} mi</div>
@@ -133,13 +133,13 @@ loader.load().then(() => {
         const infoWindow = new google.maps.InfoWindow({
           // TODO: pass link to load via API
           content: infoWindowContent,
-          disableAutoPan: true
+          disableAutoPan: true,
         });
-        google.maps.event.addListener(infoWindow, 'domready', function() {
+        google.maps.event.addListener(infoWindow, 'domready', () => {
           document.getElementById(dismissButtonId).addEventListener('click', dismissLoad(load));
 
-          const shortlistButton = document.getElementById(shortlistButtonId);
-          shortlistButton && shortlistButton.addEventListener('click', shortlistLoad(load));
+          const shortlistButtonEl = document.getElementById(shortlistButtonId);
+          shortlistButtonEl && shortlistButtonEl.addEventListener('click', shortlistLoad(load));
         });
         document.addEventListener(`load:${load.id}:delete`, () => {
           markerA.setMap(null);
@@ -147,14 +147,14 @@ loader.load().then(() => {
           line.setMap(null);
           infoWindow.setMap(null);
         });
-        [line, markerA, markerB].forEach(obj => {
-          obj.addListener('mouseover', emboldenListener(weightMultiplier(load)*2));
+        [line, markerA, markerB].forEach((obj) => {
+          obj.addListener('mouseover', emboldenListener(weightMultiplier(load) * 2));
           obj.addListener('mouseout', emboldenListener(weightMultiplier(load)));
           obj.addListener('mouseover', (evt) => {
             infoWindow.setPosition(evt.latLng);
             infoWindow.open({
-              map: map
-            })
+              map,
+            });
           });
           obj.addListener('mouseout', () => infoWindow.close());
         });

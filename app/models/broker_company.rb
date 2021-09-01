@@ -5,6 +5,7 @@ class BrokerCompany < ApplicationRecord
   NAME_TQL = 'TQL'.freeze
 
   NAME_SUBSTITUTIONS = {
+    'Bnsf Logistics Llc' => 'BNSF Logistics',
     'Ch Robinson Company' => 'CH Robinson',
     'Coyote Logistics Llc' => 'Coyote',
     'Fitzmark Inc/Fitzmark Trucking Llc' => 'Fitzmark Trucking',
