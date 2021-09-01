@@ -4,7 +4,6 @@ class LoadsController < ApplicationController
   before_action :load_resource, only: %i[show destroy shortlist unshortlist]
   before_action :set_maps_from_session
 
-  # rubocop:disable Metrics/MethodLength
   def index
     @loads = @loads.where('pickup_date > ?', earliest_pickup) if earliest_pickup
     @loads = @loads.where('pickup_date < ?', latest_pickup) if latest_pickup
@@ -17,7 +16,6 @@ class LoadsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def shortlisted
     @loads = @loads.shortlisted
