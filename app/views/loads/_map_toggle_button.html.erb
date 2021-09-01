@@ -1,5 +1,5 @@
 <% if @hide_maps %>
-  <%= button_to 'Show maps', show_maps_loads_path %>
+  <%= button_to 'Show maps', show_maps_loads_path, form_class: 'map-toggle-button' %>
 <% else %>
-  <%= button_to 'Hide maps', hide_maps_loads_path %>
+  <%= button_to 'Hide maps', hide_maps_loads_path, form_class: 'map-toggle-button' %>
 <% end %>

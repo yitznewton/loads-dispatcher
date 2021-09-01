@@ -3,8 +3,6 @@
 
 <h1><%= title %></h1>
 
-<%= render 'map_toggle_button' %>
-
 <% if shortlist? %>
   <div><%= link_to 'All loads', loads_path %></div>
 <% else %>
@@ -12,4 +10,5 @@
 <% end %>
 
 <%= render 'table' %>
+<%= render 'map_toggle_button' %>
 <%= render 'map' unless @hide_maps %>
