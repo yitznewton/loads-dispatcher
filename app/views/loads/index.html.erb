@@ -3,17 +3,13 @@
 
 <h1><%= title %></h1>
 
+<%= render 'map_toggle_button' %>
+
 <% if shortlist? %>
   <div><%= link_to 'All loads', loads_path %></div>
 <% else %>
   <div><%= link_to 'Shortlist', loads_path(shortlisted: true) %></div>
 <% end %>
 
-<%= form_with method: :get do |form| %>
-<%= form.date_field :earliest_pickup, value: earliest_pickup.to_date %>
-<%= form.date_field :latest_pickup, value: latest_pickup.to_date %>
-<%= form.submit 'Search' %>
-<% end %>
-
 <%= render 'table' %>
-<%= render 'map' %>
+<%= render 'map' unless @hide_maps %>

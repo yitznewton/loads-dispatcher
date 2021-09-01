@@ -1,6 +1,7 @@
 class LoadsController < ApplicationController
   protect_from_forgery except: %i[destroy shortlist]
   before_action :load_resource, only: %i[show destroy shortlist unshortlist]
+  before_action :set_maps_from_session
 
   # rubocop:disable Metrics/MethodLength
   def index
@@ -57,6 +58,16 @@ class LoadsController < ApplicationController
     end
   end
 
+  def show_maps
+    @hide_maps = session[:hide_maps] = false
+    redirect_back(fallback_location: loads_path)
+  end
+
+  def hide_maps
+    @hide_maps = session[:hide_maps] = true
+    redirect_back(fallback_location: loads_path)
+  end
+
   def earliest_pickup
     (params[:earliest_pickup].presence || Time.current).to_time.beginning_of_day
   end
@@ -76,5 +87,9 @@ class LoadsController < ApplicationController
 
   def load_resource
     @load = Load.find(params[:id])
+  end
+
+  def set_maps_from_session
+    @hide_maps = session[:hide_maps]
   end
 end
