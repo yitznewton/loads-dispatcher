@@ -21,6 +21,9 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*_spec.rb
 
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
 Rails/Blank:
   UnlessPresent: false
 
