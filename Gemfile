@@ -11,7 +11,6 @@ gem 'pg'
 gem 'puma'
 gem 'rails', '~> 6.1.4'
 gem 'sass-rails'
-gem 'sqlite3'
 gem 'turbolinks'
 gem 'webpacker'
 # Use Redis adapter to run Action Cable in production
@@ -32,6 +31,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
+  gem 'sqlite3'
 end
 
 group :development do
