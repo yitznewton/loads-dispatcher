@@ -1,26 +1,37 @@
 class LoadsController < ApplicationController
   protect_from_forgery except: %i[destroy shortlist]
+  before_action :load_resources, only: %i[index shortlisted]
   before_action :load_resource, only: %i[show destroy shortlist unshortlist]
   before_action :set_maps_from_session
 
   # rubocop:disable Metrics/MethodLength
   def index
-    @loads = Load.active
-                 .includes(:broker_company)
-                 .where('pickup_date > ?', earliest_pickup)
-                 .where('pickup_date < ?', latest_pickup)
-                 .order(:pickup_date)
-
-    @loads = @loads.shortlisted if shortlist?
+    @loads = @loads.where('pickup_date > ?', earliest_pickup) if earliest_pickup
+    @loads = @loads.where('pickup_date < ?', latest_pickup) if latest_pickup
 
     respond_to do |format|
       format.html
+
       format.json do
         render json: @loads
       end
     end
   end
   # rubocop:enable Metrics/MethodLength
+
+  def shortlisted
+    @loads = @loads.shortlisted
+
+    respond_to do |format|
+      format.html do
+        render 'index'
+      end
+
+      format.json do
+        render json: @loads
+      end
+    end
+  end
 
   def show
   end
@@ -69,21 +80,27 @@ class LoadsController < ApplicationController
   end
 
   def earliest_pickup
-    (params[:earliest_pickup].presence || Time.current).to_time.beginning_of_day
+    params[:earliest_pickup].presence&.to_time&.beginning_of_day
   end
   helper_method :earliest_pickup
 
   def latest_pickup
-    (params[:latest_pickup].presence || Time.current).to_time.end_of_day
+    params[:latest_pickup].presence&.to_time&.end_of_day
   end
   helper_method :latest_pickup
 
   def shortlist?
-    params[:shortlisted].present?
+    action_name == 'shortlisted'
   end
   helper_method :shortlist?
 
   private
+
+  def load_resources
+    @loads = Load.active
+                 .includes(:broker_company)
+                 .order(:pickup_date)
+  end
 
   def load_resource
     @load = Load.find(params[:id])

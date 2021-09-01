@@ -8,15 +8,25 @@ const loader = new Loader({
   libraries: []
 })
 
-const urlParams = new URLSearchParams({
-  earliest_pickup: document.getElementById("earliest-pickup").dataset.date || '',
-  latest_pickup: document.getElementById("latest-pickup").dataset.date || '',
-  shortlisted: document.getElementById("shortlisted").dataset.shortlisted || ''
-})
+let loadsUrl, urlParams;
+
+if (document.getElementById("shortlisted").dataset.shortlisted) {
+  loadsUrl = '/loads/shortlist.json';
+  urlParams = new URLSearchParams();
+} else {
+  loadsUrl = '/loads.json';
+  urlParams = new URLSearchParams({
+    earliest_pickup: document.getElementById("earliest-pickup").dataset.date || '',
+    latest_pickup: document.getElementById("latest-pickup").dataset.date || ''
+  })
+}
 
 const dismissLoad = load => evt => {
   evt.stopPropagation();
-  fetch(`/loads/${load.id}.json`, {method: 'DELETE'}).then(() => {
+  fetch(`/loads/${load.id}.json`, {method: 'DELETE'}).then((response) => {
+    if (response.status !== 200) {
+      return;
+    }
     const deleteEvent = new Event(`load:${load.id}:delete`);
     document.dispatchEvent(deleteEvent);
   });
@@ -24,10 +34,14 @@ const dismissLoad = load => evt => {
 
 const shortlistLoad = load => function(evt) {
   evt.stopPropagation();
-  fetch(`/loads/${load.id}/shortlist.json`, {method: 'POST'});
-  const shortlistedText = document.createElement('span');
-  shortlistedText.textContent = 'Shortlisted';
-  this.replaceWith(shortlistedText);
+  fetch(`/loads/${load.id}/shortlist.json`, {method: 'POST'}).then((response) => {
+    if (response.status !== 200) {
+      return;
+    }
+    const shortlistedText = document.createElement('span');
+    shortlistedText.textContent = 'Shortlisted';
+    this.replaceWith(shortlistedText);
+  });
 };
 
 const polyLineStrokeColor = load => {
@@ -52,15 +66,15 @@ const weightMultiplier = load => {
 };
 
 loader.load().then(() => {
-  fetch('/loads.json?' + urlParams).then(data => {
+  fetch(loadsUrl + urlParams).then(data => {
     data.json().then(json => {
       const bounds = new google.maps.LatLngBounds();
 
       map = new google.maps.Map(document.getElementById("map"));
       let markers = [];
 
-      json.slice(0, 10).forEach(load => {
-      // json.forEach(load => {
+      // json.slice(0, 10).forEach(load => {
+      json.forEach(load => {
         bounds.extend(load.pickup_location);
         bounds.extend(load.dropoff_location);
         const isOld = load.hours_old > 18;
@@ -131,6 +145,7 @@ loader.load().then(() => {
           markerA.setMap(null);
           markerB.setMap(null);
           line.setMap(null);
+          infoWindow.setMap(null);
         });
         [line, markerA, markerB].forEach(obj => {
           obj.addListener('mouseover', emboldenListener(weightMultiplier(load)*2));
