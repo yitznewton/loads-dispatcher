@@ -6,8 +6,10 @@
 
 <dl>
   <%= load_field @load, "#{@load.pickup_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.pickup_location}", 'Pickup' %>
-  <%= load_field @load, "#{@load.dropoff_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.dropoff_location}", 'Dropoff' %>
-  <%= load_field @load, :broker_company, 'Broker company' %>
+  <%= load_field @load, [@load.dropoff_date&.strftime('%a %-m/%-d %H:%M'), @load.dropoff_location].compact.join(' - '), 'Dropoff' %>
+  <%= load_field @load, nil, 'Broker' do -%>
+    <%= broker_data(@load) %>
+  <% end %>
   <%= load_field @load, :reference_number %>
   <%= load_field @load, number_with_delimiter(@load.weight), 'Weight' %>
   <%= load_field @load, :length %>
