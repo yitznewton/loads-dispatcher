@@ -32,16 +32,9 @@ module LoadsHelper
   end
 
   def email_link(load)
-    email_url = URI('https://mail.google.com/mail')
-
-    email_url.query = {
-      view: :cm,
-      su: email_subject(load),
-      to: load.contact_email,
-      body: email_body(load)
-    }.to_query
-
-    link_to(load.contact_email || 'compose email', email_url.to_s, target: 'dispatcher_email')
+    mail_to(load.contact_email, load.contact_email || 'compose email',
+            subject: email_subject(load),
+            body: email_body(load))
   end
 
   def email_subject(load)
@@ -56,7 +49,7 @@ module LoadsHelper
 
       Dear #{load.contact_name || '_____'}:
 
-      Regarding load reference number #{load.reference_number}, I have a 26' box truck in the area with a highly qualified CDL driver. Our ETA to the shipper's location (#{load.pickup_location}) is ________. I can deliver this load for you for $________.
+      Regarding load reference number #{load.reference_number}, I have a 26' box truck in the area with an experienced CDL driver. Our ETA to the shipper's location (#{load.pickup_location}) is ________. I can deliver this load for you for $________.
 
       Have a great day!
       --
