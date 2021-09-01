@@ -8,8 +8,8 @@ const loader = new Loader({
   libraries: [],
 });
 
-let loadsUrl; let
-  urlParams;
+let loadsUrl;
+let urlParams;
 
 if (document.getElementById('shortlisted').dataset.shortlisted) {
   loadsUrl = '/loads/shortlist.json';
@@ -67,7 +67,7 @@ const weightMultiplier = (load) => {
 };
 
 loader.load().then(() => {
-  fetch(loadsUrl + urlParams).then((data) => {
+  fetch(`${loadsUrl}?${urlParams}`).then((data) => {
     data.json().then((json) => {
       const bounds = new google.maps.LatLngBounds();
 
