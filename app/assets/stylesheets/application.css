@@ -14,11 +14,6 @@
  *= require_self
  */
 
-@font-face {
-  font-family: "Roboto Condensed";
-  src:url("RobotoCondensed-Regular.ttf");
-}
-
 body, html {
   height: 100%;
   font-family: "Roboto Condensed", sans-serif;
