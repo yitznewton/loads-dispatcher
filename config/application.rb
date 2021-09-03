@@ -18,5 +18,7 @@ module Dispatcher
     #
     config.time_zone = 'America/New_York'
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.middleware.use(Rack::Deflater)
   end
 end
