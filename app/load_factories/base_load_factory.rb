@@ -9,11 +9,13 @@ class BaseLoadFactory
 
   attr_reader :load_data
 
+  # rubocop:disable Metrics/MethodLength
   def call
     Load.transaction do
       load = find_or_create_load
 
       if load.valid?
+        load.load_identifier.undestroy!
         RawLoad.create!(data: load_data, load: load)
         next load
       else
@@ -22,6 +24,7 @@ class BaseLoadFactory
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def find_or_create_load
     found_load = Load.find_by(load_identifier: load_identifier)
