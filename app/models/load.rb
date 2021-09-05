@@ -16,6 +16,8 @@ class Load < ApplicationRecord
   belongs_to :broker_company
   belongs_to :load_identifier
 
+  has_paper_trail ignore: %i[created_at updated_at shortlisted_at dismissed_at raw]
+
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :distance, presence: true, numericality: { greater_than: 0 }
   validates :pickup_date, presence: true
