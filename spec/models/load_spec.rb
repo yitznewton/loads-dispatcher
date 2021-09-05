@@ -70,7 +70,7 @@ describe Load do
       let(:updated_attributes) {{ weight: 7000 }}
 
       it 'creates a new version' do
-        expect { load.update!(base_attributes.merge(updated_attributes)) }.to(change { load.versions.size }.by(1) )
+        expect { load.update!(base_attributes.merge(updated_attributes)) }.to(change { load.versions.size }.by(1))
       end
     end
 
