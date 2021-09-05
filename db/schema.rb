@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_31_162731) do
+ActiveRecord::Schema.define(version: 2021_09_05_190410) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -108,6 +108,18 @@ ActiveRecord::Schema.define(version: 2021_08_31_162731) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["load_id"], name: "index_raw_loads_on_load_id"
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type"
+    t.string "{:null=>false}"
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object", limit: 1073741823
+    t.datetime "created_at"
+    t.text "object_changes", limit: 1073741823
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "broker_company_identifiers", "broker_companies"

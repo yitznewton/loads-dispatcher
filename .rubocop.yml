@@ -30,6 +30,9 @@ Rails/Blank:
 RSpec/ExpectChange:
   EnforcedStyle: block
 
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
 Style/BlockComments:
   Exclude:
     - spec/spec_helper.rb

@@ -3,6 +3,11 @@ require 'rails_helper'
 describe Load do
   subject(:load) { described_class.new(complete_attributes) }
 
+  let!(:broker_company) { BrokerCompany.create!(name: 'TQL') }
+  let!(:load_board) { LoadBoard.create!(name: 'TQL') }
+  let!(:load_identifier) { LoadIdentifier.create!(identifier: 'ABC123', load_board: load_board) }
+
+  let(:pickup_date) { Time.current }
   let(:complete_attributes) { base_attributes.merge(attributes) }
   let(:attributes) {{}}
 
@@ -56,16 +61,38 @@ describe Load do
     expect(load.hours_old(current_time)).to be_within(0.001).of(1.5)
   end
 
+  describe 'versioning' do
+    before do
+      load.save!
+    end
+
+    context 'when updating a watched attribute' do
+      let(:updated_attributes) {{ weight: 7000 }}
+
+      it 'creates a new version' do
+        expect { load.update!(base_attributes.merge(updated_attributes)) }.to(change { load.versions.size }.by(1))
+      end
+    end
+
+    context 'when updating an unwatched attribute' do
+      let(:updated_attributes) {{ shortlisted_at: Time.current }}
+
+      it 'does not create a new version' do
+        expect { load.update!(base_attributes.merge(updated_attributes)) }.not_to(change { load.versions.size })
+      end
+    end
+  end
+
   def base_attributes
     {
-      pickup_date: Time.current,
+      pickup_date: pickup_date,
       pickup_location: {city: 'Passaic', state: 'NJ', county: 'Passaic'},
       dropoff_location: {city: 'West Hartford', state: 'CT', county: 'Hartford'},
       weight: 5000,
       rate: 20000,
       distance: 100,
-      broker_company: BrokerCompany.new(name: 'TQL'),
-      load_identifier: LoadIdentifier.new(identifier: 'ABC123')
+      broker_company: broker_company,
+      load_identifier: load_identifier
     }
   end
 end
