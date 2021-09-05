@@ -57,6 +57,17 @@ describe 'LoadFactory' do
       end
     end
 
+    context 'with an existing deleted load identifier' do
+      before do
+        TqlLoadFactory.call(complete_load_data).load_identifier.destroy!
+      end
+
+      it 'un-deletes the load identifier' do
+        load = TqlLoadFactory.call(complete_load_data)
+        expect(load.load_identifier).not_to be_deleted
+      end
+    end
+
     it 'updates the load' do
       updated_data = complete_load_data.merge('Weight' => 8000)
       TqlLoadFactory.call(updated_data)
