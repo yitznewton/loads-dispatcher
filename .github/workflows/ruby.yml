@@ -33,5 +33,5 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - run: bundle exec rubocop
     - run: bundle exec rake assets:precompile
-    - run: bundle exec rake
+    - run: bundle exec rspec -f p
     - run: yarn run eslint app/javascript/packs/
