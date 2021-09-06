@@ -59,7 +59,7 @@ class TqlRefresh < BaseRefresh
       DestState: dropoff_location.state,
       IsActive: true,
       IsFavorite: 0,
-      LoadDate: "#{origin_date}T04:00:00.000Z",
+      LoadDate: "#{origin_date.to_date}T04:00:00.000Z",
       OriginCity: pickup_location.city,
       OriginCityID: pickup_location.tql_id,
       OriginRadius: pickup_location.radius,

@@ -9,4 +9,6 @@ Rails.application.routes.draw do
     post :show_maps, on: :collection
     post :hide_maps, on: :collection
   end
+
+  resource :refresh, only: %i[show create]
 end
