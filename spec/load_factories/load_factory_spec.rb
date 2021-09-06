@@ -27,7 +27,7 @@ describe 'LoadFactory' do
         'Miles' => 0
       }}
 
-      it 'is retrieved from Google using the expected place names' do  # rubocop:disable RSpec/MultipleExpectations
+      it 'is retrieved from Google using the expected place names' do
         expect(load.distance).to eq(123)
         expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
       end

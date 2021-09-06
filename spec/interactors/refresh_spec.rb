@@ -66,7 +66,7 @@ describe 'Refresh' do
     expect { described_class.new([load_data]).call }.to(change { Load.count }.by(1))
   end
 
-  # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
+  # rubocop:disable RSpec/ExampleLength
   it 'deletes missing identifiers from only the same load board' do
     other_load_board = LoadBoard.create!(name: 'something else')
     ident_from_same_board = LoadIdentifier.create!(identifier: 'XYZ987', load_board: load_board)
@@ -79,5 +79,5 @@ describe 'Refresh' do
     expect(ident_from_same_board.reload).to be_deleted
     expect(ident_from_other_board.reload).not_to be_deleted
   end
-  # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
+  # rubocop:enable RSpec/ExampleLength
 end

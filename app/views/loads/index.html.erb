@@ -4,7 +4,12 @@
 <h1><%= title %></h1>
 
 <% if shortlist? %>
-  <nav><%= link_to 'All loads', root_path %> | <%= link_to 'Refresh data', refresh_path %></nav>
+  <nav>
+    <%= link_to 'All loads', root_path %> |
+    <%= link_to 'Refresh data', refresh_path %> |
+    <%= button_to 'Clear expired loads from shortlist', clear_deleted_from_shortlist_loads_path,
+                  form_class: 'clear-expired-loads-form' %>
+  </nav>
 <% else %>
   <nav><%= link_to 'Shortlist', shortlist_loads_path %> | <%= link_to 'Refresh data', refresh_path %></nav>
 <% end %>

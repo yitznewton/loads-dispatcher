@@ -78,6 +78,11 @@ class LoadsController < ApplicationController
     redirect_back(fallback_location: loads_path)
   end
 
+  def clear_deleted_from_shortlist
+    Load.deleted.unshortlist_all
+    redirect_back(fallback_location: shortlist_loads_path)
+  end
+
   def earliest_pickup
     params[:earliest_pickup].presence&.to_time&.beginning_of_day
   end
