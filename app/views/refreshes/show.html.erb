@@ -4,3 +4,14 @@
 <h1><%= title %></h1>
 
 <nav><%= link_to 'Back to home', root_path %></nav>
+
+<%= form_with method: :post, id: 'refresh-form', local: false do |form| %>
+  <%= form.label :truckers_edge_auth_token, 'TruckersEdge auth token' %>
+  <%= form.text_area :truckers_edge_auth_token %>
+
+  <%= form.submit 'Submit' %>
+<% end %>
+
+<div id="form-result"></div>
+
+<%= javascript_pack_tag 'refresh.js' %>
