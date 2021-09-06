@@ -15,6 +15,11 @@ table {
   }
 }
 
+tr.deleted {
+  text-decoration: line-through;
+  opacity: 50%;
+}
+
 .dismiss-button-form, .shortlist-button-form, .unshortlist-button-form {
   display: inline;
 }

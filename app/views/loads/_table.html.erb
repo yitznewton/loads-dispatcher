@@ -20,7 +20,7 @@
     </thead>
     <tbody>
       <% @loads.each do |l| %>
-        <%= content_tag :tr, id: "load_#{l.id}" do -%>
+        <%= content_tag :tr, id: "load_#{l.id}", class: ('deleted' if l.deleted?) do -%>
           <td nowrap>
             <%= button_to 'Dismiss', l, method: :delete, class: 'dismiss-button', form_class: 'dismiss-button-form', remote: true,
                             form: { data: { load_id: l.id } } %>
