@@ -5,6 +5,7 @@ ruby '3.0.2'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'awesome_print'
+gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'faraday'
 gem 'jbuilder'
