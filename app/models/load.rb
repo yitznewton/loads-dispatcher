@@ -27,7 +27,8 @@ class Load < ApplicationRecord
   validate :no_nyc_long_island
 
   scope :active, -> { joins(:load_identifier).where(dismissed_at: nil).merge(LoadIdentifier.active) }
-  scope :shortlisted, -> { where.not(shortlisted_at: nil) }
+  scope :dismissed, -> { where.not(dismissed_at: nil) }
+  scope :shortlisted, -> { where.not(shortlisted_at: nil).where(dismissed_at: nil) }
 
   def self.clear_shortlist!
     update_all(shortlisted_at: nil) # rubocop:todo Rails/SkipsModelValidations
@@ -39,6 +40,10 @@ class Load < ApplicationRecord
 
   def old?
     hours_old > 18
+  end
+
+  def deleted?
+    load_identifier.deleted?
   end
 
   def high_rate?

@@ -5,6 +5,7 @@ class LoadsController < ApplicationController
   before_action :set_maps_from_session
 
   def index
+    @loads = @loads.active
     @loads = @loads.where('pickup_date > ?', earliest_pickup) if earliest_pickup
     @loads = @loads.where('pickup_date < ?', latest_pickup) if latest_pickup
 
@@ -95,8 +96,7 @@ class LoadsController < ApplicationController
   private
 
   def load_resources
-    @loads = Load.active
-                 .includes(:broker_company)
+    @loads = Load.includes(:broker_company)
                  .order(:pickup_date)
   end
 
