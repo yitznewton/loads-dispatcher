@@ -10,8 +10,10 @@ describe 'Refreshes', type: :request do
 
   describe 'making a request refresh' do
     context 'with bad params' do
-      post '/refresh.json', params: { foo: 'bar' }
-      expect(response).to have_http_status(:bad_request)
+      it 'returns BAD REQUEST status' do
+        post '/refresh.json', params: { foo: 'bar' }
+        expect(response).to have_http_status(:bad_request)
+      end
     end
 
     context 'with good params' do
@@ -21,9 +23,9 @@ describe 'Refreshes', type: :request do
       end
 
       it 'enqueues a combined refresh job' do
-        expect {
+        assert_enqueued_with(job: LoadsDataRefreshJob, args: [{truckers_edge_auth_token: 'ABC123'}]) do
           post '/refresh.json', params: { truckers_edge_auth_token: 'ABC123' }
-        }.to(change { Delayed::Job.count }.by(1))
+        end
       end
     end
   end
