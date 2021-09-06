@@ -4,9 +4,9 @@
 <h1><%= title %></h1>
 
 <% if shortlist? %>
-  <div><%= link_to 'All loads', loads_path %></div>
+  <nav><%= link_to 'All loads', root_path %> | <%= link_to 'Refresh data', refresh_path %></nav>
 <% else %>
-  <div><%= link_to 'Shortlist', shortlist_loads_path %></div>
+  <nav><%= link_to 'Shortlist', shortlist_loads_path %> | <%= link_to 'Refresh data', refresh_path %></nav>
 <% end %>
 
 <%= render 'table' %>
