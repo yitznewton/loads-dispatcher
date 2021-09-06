@@ -33,6 +33,9 @@ Rails/Delegate:
 RSpec/ExpectChange:
   EnforcedStyle: block
 
+RSpec/MultipleExpectations:
+  Enabled: false
+
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
 

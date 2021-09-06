@@ -84,6 +84,11 @@ GEM
       delayed_job (>= 3.0, < 5)
     diff-lcs (1.4.4)
     erubi (1.10.0)
+    factory_bot (6.2.0)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     faraday (1.7.1)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -272,6 +277,7 @@ DEPENDENCIES
   bootsnap
   byebug
   delayed_job_active_record
+  factory_bot_rails
   faraday
   jbuilder
   listen

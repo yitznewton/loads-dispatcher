@@ -28,9 +28,10 @@ class Load < ApplicationRecord
 
   scope :active, -> { joins(:load_identifier).where(dismissed_at: nil).merge(LoadIdentifier.active) }
   scope :dismissed, -> { where.not(dismissed_at: nil) }
+  scope :deleted, -> { joins(:load_identifier).merge(LoadIdentifier.where.not(deleted_at: nil)) }
   scope :shortlisted, -> { where.not(shortlisted_at: nil).where(dismissed_at: nil) }
 
-  def self.clear_shortlist!
+  def self.unshortlist_all
     update_all(shortlisted_at: nil) # rubocop:todo Rails/SkipsModelValidations
   end
 

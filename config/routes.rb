@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     get :shortlist, action: :shortlisted, on: :collection
     post :show_maps, on: :collection
     post :hide_maps, on: :collection
+    post :clear_deleted_from_shortlist, on: :collection
   end
 
   resource :refresh, only: %i[show create]

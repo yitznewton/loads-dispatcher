@@ -34,7 +34,7 @@ describe TruckersEdgeLoadFactory do
         'tripMiles' => 100
       }}
 
-      it 'is retrieved from Google' do  # rubocop:disable RSpec/MultipleExpectations
+      it 'is retrieved from Google' do
         expect(load.distance).to eq(123)
         expect(DistanceFromGoogle).to have_received(:call).with(origin: 'Passaic, NJ', destination: 'West Hartford, CT')
       end
