@@ -2,7 +2,7 @@ class LoadIdentifier < ApplicationRecord
   belongs_to :load_board
   has_one :load, dependent: :nullify
 
-  scope :active, -> { where(deleted_at: nil) }
+  scope :active, -> { where(deleted_at: nil).or(where('load_identifiers.deleted_at > ?', Time.current - 1.hour)) }
 
   def destroy
     update(deleted_at: Time.current)
