@@ -87,7 +87,7 @@ class Load < ApplicationRecord
   def no_excluded_notes
     return unless notes.present?
 
-    note_thing = notes.downcase.gsub(' ', '')
+    note_thing = notes.downcase.delete(' ')
 
     EXCLUDED_NOTES.each do |key, excluded_text|
       if note_thing.include?(excluded_text)
