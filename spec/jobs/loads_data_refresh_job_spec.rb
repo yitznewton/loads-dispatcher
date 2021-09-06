@@ -5,7 +5,7 @@ describe LoadsDataRefreshJob do
     allow(CombinedRefresh).to receive(:call)
   end
 
-  it 'calls a combined refresh' do
+  it 'calls a combined refresh' do # rubocop:todo RSpec/MultipleExpectations
     described_class.perform_now(truckers_edge_auth_token: 'ABC123')
 
     expect(CombinedRefresh).to have_received(:call) do |kwargs|
