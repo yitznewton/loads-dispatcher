@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_06_013717) do
+ActiveRecord::Schema.define(version: 2021_09_09_185648) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -26,6 +26,13 @@ ActiveRecord::Schema.define(version: 2021_09_06_013717) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["broker_company_id"], name: "index_broker_company_identifiers_on_broker_company_id"
     t.index ["load_board_id"], name: "index_broker_company_identifiers_on_load_board_id"
+  end
+
+  create_table "broker_company_name_substitutions", force: :cascade do |t|
+    t.string "before", null: false
+    t.string "after", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "cities", force: :cascade do |t|
