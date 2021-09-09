@@ -3,6 +3,8 @@ class BrokerCompanyNameSubstitution < ApplicationRecord
 
   after_save :invalidate_cache
 
+  validates :before, uniqueness: true
+
   def self.to_h
     Rails.cache.fetch(CACHE_KEY) do
       all.pluck(:before, :after).to_h
