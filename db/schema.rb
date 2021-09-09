@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_09_185648) do
+ActiveRecord::Schema.define(version: 2021_09_09_201940) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_185648) do
     t.string "after", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["before"], name: "index_broker_company_name_substitutions_on_before", unique: true
   end
 
   create_table "cities", force: :cascade do |t|
