@@ -6,6 +6,10 @@ class BrokerCompanyNameSubstitutionsController < ApplicationController
   end
 
   def new
+    if (name_sub = BrokerCompanyNameSubstitution.find_by(before: params[:before]))
+      redirect_to edit_broker_company_name_substitution_path(id: name_sub)
+    end
+
     @broker_company_name_substitution = BrokerCompanyNameSubstitution.new(before: params[:before])
   end
 
