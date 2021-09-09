@@ -4,27 +4,6 @@ class BrokerCompany < ApplicationRecord
 
   NAME_TQL = 'TQL'.freeze
 
-  NAME_SUBSTITUTIONS = {
-    'Bnsf Logistics Llc' => 'BNSF Logistics',
-    'Ch Robinson Company' => 'CH Robinson',
-    'Coyote Logistics Llc' => 'Coyote',
-    'Fitzmark Inc/Fitzmark Trucking Llc' => 'Fitzmark Trucking',
-    'Globaltranz/Afn' => 'Globaltranz',
-    'Jb Hunt Transport Services' => 'JB Hunt',
-    'Jb Hunt Transport Services Inc' => 'JB Hunt',
-    'NFI Logistics/NFI Transportation' => 'NFI',
-    'Pepsi Logistics Company Inc' => 'Pepsi',
-    'Pls Logistics Services' => 'PLS Logistics',
-    'Png Logistics Company Llc' => 'PNG Logistics',
-    'Quad Logistics Services Llc' => 'Quad Logistics',
-    'R & R Express Logistics Inc/R & R Express Inc' => 'R & R Express',
-    'Schneider National Inc' => 'Schneider',
-    'Swift Logistics/Swift Transportation Company Of Az' => 'Swift',
-    'Ta Brokerage Llc' => 'TA Brokerage',
-    'Total Quality Logistics Inc' => 'TQL',
-    'Us Xpress Inc' => 'US Xpress'
-  }.freeze
-
   def to_s
     BrokerCompanyNameSubstitution.to_h.fetch(name, name)
                                  .delete_suffix(' INC')
