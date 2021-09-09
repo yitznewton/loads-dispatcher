@@ -53,7 +53,7 @@ describe 'LoadFactory' do
       it 'removes the load' do
         updated_data = complete_load_data.merge('Weight' => 0)
         TqlLoadFactory.call(updated_data)
-        expect(load).to be_deleted
+        expect(Load.active.count).to eq(0)
       end
     end
 
