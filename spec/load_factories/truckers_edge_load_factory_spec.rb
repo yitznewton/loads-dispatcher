@@ -16,6 +16,79 @@ describe TruckersEdgeLoadFactory do
     described_class.call(complete_load_data)
   end
 
+  # rubocop:disable RSpec/ExampleLength
+  describe 'unique identification' do
+    context 'when a reference number is present' do
+      let(:load_data) {{
+        'matchId' => 'a',
+        'postersReferenceId' => 'ABC123',
+        'combinedOfficeId' => '92817'
+      }}
+
+      it 'uses company identifier and reference number' do
+        second_load_data = complete_load_data.merge(
+          'matchId' => 'b'
+        )
+
+        third_load_data = complete_load_data.merge(
+          'matchId' => 'c',
+          'combinedOfficeId' => '28179'
+        )
+
+        expect { described_class.call(second_load_data) }.not_to(change { Load.count })
+        expect { described_class.call(third_load_data) }.to(change { Load.count }.by(1))
+      end
+    end
+
+    context 'when no reference number is present' do
+      let(:load_data) {{
+        'matchId' => 'a',
+        'postersReferenceId' => nil,
+        'origin' => {'city' => 'Passaic', 'state' => 'NJ'},
+        'destination' => {'city' => 'West Hartford', 'state' => 'CT'},
+        'pickupDate' => '2021-08-29T00:00:00.000Z',
+        'weight' => 600,
+        'combinedOfficeId' => '92817'
+      }}
+
+      it 'uses company identifier, pickup time, pickup and dropoff locations, and weight' do
+        second_load_data = complete_load_data.merge(
+          'matchId' => 'b'
+        )
+
+        differentiating_load_data = [
+          complete_load_data.merge(
+            'matchId' => 'c',
+            'combinedOfficeId' => '28179'
+          ),
+          complete_load_data.merge(
+            'matchId' => 'd',
+            'pickupDate' => '2021-08-29T12:00:00.000Z'
+          ),
+          complete_load_data.merge(
+            'matchId' => 'e',
+            'origin' => {'city' => 'Hackensack', 'state' => 'NJ'}
+          ),
+          complete_load_data.merge(
+            'matchId' => 'f',
+            'destination' => {'city' => 'Bloomfield', 'state' => 'CT'}
+          ),
+          complete_load_data.merge(
+            'matchId' => 'g',
+            'weight' => 800
+          )
+        ]
+
+        expect { described_class.call(second_load_data) }.not_to(change { Load.count })
+
+        differentiating_load_data.each do |data|
+          expect { described_class.call(data) }.to(change { Load.count }.by(1), "#{data} expected to add a load")
+        end
+      end
+    end
+  end
+  # rubocop:enable RSpec/ExampleLength
+
   describe 'distance' do
     context 'when given in surface miles' do
       let(:load_data) {{
@@ -71,10 +144,6 @@ describe TruckersEdgeLoadFactory do
     expect(load.broker_company.to_s).to eq('Foo Logistics')
   end
 
-  it 'creates load identifier model' do
-    expect(load.load_identifier.identifier).to eq('ABC123')
-  end
-
   # rubocop:disable Metrics/MethodLength
   def base_load_data
     {
@@ -90,7 +159,8 @@ describe TruckersEdgeLoadFactory do
       'combinedOfficeId' => '92187',
       'companyName' => 'Foo Logistics',
       'callback' => {'phone' => '2125551212', 'type' => 'Phone'},
-      'contactName' => {'first' => 'Joe', 'last' => 'Bobkin'}
+      'contactName' => {'first' => 'Joe', 'last' => 'Bobkin'},
+      'postersReferenceId' => 'ABC123'
     }
   end
   # rubocop:enable Metrics/MethodLength

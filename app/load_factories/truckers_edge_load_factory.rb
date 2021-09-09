@@ -6,10 +6,26 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
 
   def load_identifier
     @load_identifier ||= LoadIdentifier.find_or_create_by!(
-      identifier: load_data.fetch('matchId'),
+      identifier: load_identifier_string,
       load_board: LoadBoard.truckers_edge
     )
   end
+
+  # rubocop:disable Metrics/AbcSize
+  def load_identifier_string
+    if load_data['postersReferenceId'].present?
+      return "company/#{broker_company_identifier.id}/ref/#{load_data.fetch('postersReferenceId')}"
+    end
+
+    [
+      'company',     broker_company_identifier.id,
+      'pickup_time', load_data['pickupDate'],
+      'origin',      load_data['origin'],
+      'destination', load_data['destination'],
+      'weight',      load_data['weight']
+    ].join('/')
+  end
+  # rubocop:enable Metrics/AbcSize
 
   # rubocop:todo Metrics/AbcSize
   # rubocop:todo Metrics/CyclomaticComplexity
@@ -37,11 +53,13 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Layout/MultilineMethodCallIndentation
   def broker_company_identifier
-    BrokerCompanyIdentifier
+    @broker_company_identifier ||= BrokerCompanyIdentifier
       .create_with(broker_company: BrokerCompany.new(name: load_data.fetch('companyName')))
       .find_or_create_by(identifier: load_data.fetch('combinedOfficeId'), load_board: LoadBoard.truckers_edge)
   end
+  # rubocop:enable Layout/MultilineMethodCallIndentation
 
   def phone(callback)
     callback.fetch('phone') if callback.fetch('type') == CALLBACK_TYPE_PHONE
