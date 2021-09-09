@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Broker Company Name Substitutions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Before</th>
+      <th>After</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @broker_company_name_substitutions.each do |broker_company_name_substitution| %>
+      <tr>
+        <td><%= broker_company_name_substitution.before %></td>
+        <td><%= broker_company_name_substitution.after %></td>
+        <td><%= link_to 'Edit', edit_broker_company_name_substitution_path(broker_company_name_substitution) %></td>
+        <td><%= link_to 'Destroy', broker_company_name_substitution, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Broker Company Name Substitution', new_broker_company_name_substitution_path %>

@@ -26,14 +26,14 @@ class BrokerCompany < ApplicationRecord
   }.freeze
 
   def to_s
-    NAME_SUBSTITUTIONS.fetch(name, name)
-                      .delete_suffix(' INC')
-                      .delete_suffix(' Inc')
-                      .delete_suffix(' LLC')
-                      .delete_suffix(' Llc')
-                      .delete_suffix(' CO')
-                      .delete_suffix(' Co')
-                      .delete_suffix(' LP')
-                      .delete_suffix(' Lp')
+    BrokerCompanyNameSubstitution.to_h.fetch(name, name)
+                                 .delete_suffix(' INC')
+                                 .delete_suffix(' Inc')
+                                 .delete_suffix(' LLC')
+                                 .delete_suffix(' Llc')
+                                 .delete_suffix(' CO')
+                                 .delete_suffix(' Co')
+                                 .delete_suffix(' LP')
+                                 .delete_suffix(' Lp')
   end
 end

@@ -1,0 +1,27 @@
+<%= form_with(model: broker_company_name_substitution) do |form| %>
+  <% if broker_company_name_substitution.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(broker_company_name_substitution.errors.count, "error") %> prohibited this broker_company_name_substitution from being saved:</h2>
+
+      <ul>
+        <% broker_company_name_substitution.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :before %>
+    <%= form.text_field :before %>
+  </div>
+
+  <div class="field">
+    <%= form.label :after %>
+    <%= form.text_field :after %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

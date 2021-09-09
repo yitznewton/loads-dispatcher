@@ -12,4 +12,6 @@ Rails.application.routes.draw do
   end
 
   resource :refresh, only: %i[show create]
+
+  resources :broker_company_name_substitutions, path: :name_subs
 end
