@@ -21,3 +21,10 @@ body, html {
 .hidden {
   display: none;
 }
+.float-right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}

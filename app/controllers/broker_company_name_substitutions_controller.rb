@@ -6,7 +6,7 @@ class BrokerCompanyNameSubstitutionsController < ApplicationController
   end
 
   def new
-    @broker_company_name_substitution = BrokerCompanyNameSubstitution.new
+    @broker_company_name_substitution = BrokerCompanyNameSubstitution.new(before: params[:before])
   end
 
   def edit
