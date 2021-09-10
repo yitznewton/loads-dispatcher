@@ -46,6 +46,8 @@ class Load < ApplicationRecord
   end
 
   def immediate_pickup?
+    return false unless pickup_date && refreshed_at
+
     # does not apply to TQL
     (pickup_date - refreshed_at).abs < 1.minute
   end
