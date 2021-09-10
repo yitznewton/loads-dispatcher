@@ -5,7 +5,7 @@ class BaseRefresh
     Load.transaction do
       City.routes.each do |(origin_city, destination_city)|
         data = response_body(origin_city: origin_city, destination_city: destination_city)
-        raise response_exception_klass unless loads?(data)
+        raise response_exception_klass.new(data) unless loads?(data)
 
         loads(data).each { |l| load_factory_klass.call(l).tap { |ll| touched_ids << ll&.id } }
       end
