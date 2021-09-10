@@ -8,6 +8,7 @@ describe Load do
   let!(:load_identifier) { LoadIdentifier.create!(identifier: 'ABC123', load_board: load_board) }
 
   let(:pickup_date) { Time.current }
+  let(:refreshed_at) { Time.current }
   let(:complete_attributes) { base_attributes.merge(attributes) }
   let(:attributes) {{}}
 
@@ -83,6 +84,27 @@ describe Load do
     end
   end
 
+  describe 'immediate pickup' do
+    let(:refreshed_at) { Time.zone.parse('2021-09-01 12:00:00') }
+
+    context 'with a future pickup' do
+      let(:pickup_date) { Time.zone.parse('2021-09-01 18:00:00') }
+
+      specify do
+        expect(load).not_to be_immediate_pickup
+      end
+    end
+
+    context 'with an immediate pickup date' do
+      let(:pickup_date) { Time.zone.parse('2021-09-01 12:00:03') }
+
+      specify do
+        expect(load).to be_immediate_pickup
+      end
+    end
+  end
+
+  # rubocop:disable Metrics/MethodLength
   def base_attributes
     {
       pickup_date: pickup_date,
@@ -92,7 +114,9 @@ describe Load do
       rate: 20000,
       distance: 100,
       broker_company: broker_company,
-      load_identifier: load_identifier
+      load_identifier: load_identifier,
+      refreshed_at: refreshed_at
     }
   end
+  # rubocop:enable Metrics/MethodLength
 end
