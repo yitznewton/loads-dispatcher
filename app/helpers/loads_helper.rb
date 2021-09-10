@@ -1,4 +1,6 @@
 module LoadsHelper
+  DATE_TEMPLATE = '%a %-m/%-d %H:%M'.freeze
+
   def currency(raw, show_cents: true)
     return nil unless raw
 
@@ -25,6 +27,14 @@ module LoadsHelper
     # rubocop:todo Rails/OutputSafety
     raw([load.broker_company, load.contact_name, phone_link(load), email_link(load)].compact.join(' - '))
     # rubocop:enable Rails/OutputSafety
+  end
+
+  def pickup_date_display(load)
+    load.immediate_pickup? ? 'Immediate' : date_display(load.pickup_date)
+  end
+
+  def date_display(date)
+    date&.strftime(DATE_TEMPLATE)
   end
 
   def phone_link(load)

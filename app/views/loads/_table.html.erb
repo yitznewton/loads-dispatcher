@@ -27,9 +27,9 @@
             <%= shortlist_button(l) %>
             <%= unshortlist_button(l) %>
           </td>
-          <td><%= link_to(l.pickup_date.strftime('%a %-m/%-d %H:%M'), l) %></td>
+          <td><%= link_to(pickup_date_display(l), l) %></td>
           <td><%= l.pickup_location %></td>
-          <td><%= l.dropoff_date&.strftime('%a %-m/%-d %H:%M') %></td>
+          <td><%= date_display(l.dropoff_date) %></td>
           <td><%= l.dropoff_location %></td>
           <%= content_tag :td, l.hours_old.to_i, class: l.old? && 'old-load' %>
           <td><%= number_with_delimiter(l.weight) %></td>

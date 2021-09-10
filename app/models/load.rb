@@ -16,7 +16,9 @@ class Load < ApplicationRecord
   belongs_to :broker_company
   belongs_to :load_identifier
 
-  has_paper_trail ignore: %i[created_at updated_at shortlisted_at dismissed_at raw]
+  has_paper_trail ignore: %i[created_at updated_at shortlisted_at refreshed_at dismissed_at raw].push(
+    pickup_date: proc { |l| l.immediate_pickup? }
+  )
 
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :distance, presence: true, numericality: { greater_than: 0 }
@@ -41,6 +43,11 @@ class Load < ApplicationRecord
 
   def old?
     hours_old > 18
+  end
+
+  def immediate_pickup?
+    # does not apply to TQL
+    (pickup_date - refreshed_at).abs < 1.minute
   end
 
   def deleted?
