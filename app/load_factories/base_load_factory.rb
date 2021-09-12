@@ -16,7 +16,7 @@ class BaseLoadFactory
 
       if load.valid?
         load.load_identifier.undestroy!
-        RawLoad.create!(data: load_data, load: load)
+        RawLoad.create!(data: load_data, load: load) if ENV['SAVE_RAW_LOADS']
         next load
       else
         load_identifier.destroy!

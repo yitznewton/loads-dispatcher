@@ -83,6 +83,10 @@ GEM
       activerecord (>= 3.0, < 6.2)
       delayed_job (>= 3.0, < 5)
     diff-lcs (1.4.4)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
@@ -280,6 +284,7 @@ DEPENDENCIES
   bootsnap
   byebug
   delayed_job_active_record
+  dotenv-rails
   factory_bot_rails
   faraday
   jbuilder
