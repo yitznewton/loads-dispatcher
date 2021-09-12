@@ -2,6 +2,7 @@ class BrokerCompany < ApplicationRecord
   has_many :broker_company_identifiers, dependent: :destroy
   has_many :loads, dependent: :restrict_with_error
 
+  NAME_JB_HUNT = 'JB Hunt'.freeze
   NAME_TQL = 'TQL'.freeze
 
   def to_s
