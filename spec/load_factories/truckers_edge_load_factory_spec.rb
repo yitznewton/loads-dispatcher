@@ -118,6 +118,14 @@ describe TruckersEdgeLoadFactory do
     it 'is converted to cents' do
       expect(load.rate).to eq(60000)
     end
+
+    context 'when it is a miserable float' do
+      let(:load_data) {{ 'rate' => 123.456789 }}
+
+      it 'truncates' do
+        expect { described_class.call(complete_load_data) }.not_to(change { Rate.count })
+      end
+    end
   end
 
   describe 'contact phone' do
