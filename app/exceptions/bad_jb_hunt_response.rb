@@ -1,0 +1,1 @@
+class BadJbHuntResponse < StandardError; end
