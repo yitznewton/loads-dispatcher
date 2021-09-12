@@ -35,7 +35,7 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
       weight: load_data['weight'],
       length: load_data['length'],
       distance: distance,
-      rate: load_data['rate']&.*(100)&.nonzero?,
+      rate: load_data['rate']&.*(100)&.nonzero?&.to_i,
       contact_name: load_data['contactName']&.slice('first', 'last')&.values&.compact&.join(' '),
       contact_phone: phone(load_data['callback']),
       contact_email: email(load_data['callback']),
