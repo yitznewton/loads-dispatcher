@@ -104,6 +104,15 @@ describe Load do
     end
   end
 
+  it 'exposes rate history' do
+    load.update!(rate: 22500)
+    load.update!(rate: 22500)
+    load.update!(rate: 25000)
+    load.update!(rate: 22500)
+
+    expect(load.reload.rates.reload.map(&:rate)).to eq([20000, 22500, 25000, 22500])
+  end
+
   # rubocop:disable Metrics/MethodLength
   def base_attributes
     {
