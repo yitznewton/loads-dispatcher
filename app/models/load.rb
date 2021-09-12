@@ -13,7 +13,7 @@ class Load < ApplicationRecord
     drop_trailer: 'droptrailer'
   }.freeze
 
-  has_many :rates, -> { order(:id) }, dependent: :delete_all
+  has_many :rates, -> { order(:id) }, dependent: :delete_all # rubocop:disable Rails/HasManyOrHasOneDependent,Rails/InverseOf
   belongs_to :broker_company
   belongs_to :load_identifier
 
