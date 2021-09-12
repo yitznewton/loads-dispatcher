@@ -48,7 +48,7 @@ class Load < ApplicationRecord
 
   # rubocop:disable Style/IfUnlessModifier
   def rate=(new_rate)
-    if rate && rate != new_rate
+    if new_rate && rate != new_rate
       rates << Rate.new(rate: new_rate)
     end
 
