@@ -13,6 +13,7 @@ class Load < ApplicationRecord
     drop_trailer: 'droptrailer'
   }.freeze
 
+  has_many :rates, dependent: :delete_all
   belongs_to :broker_company
   belongs_to :load_identifier
 
@@ -44,6 +45,16 @@ class Load < ApplicationRecord
   def old?
     hours_old > 18
   end
+
+  # rubocop:disable Style/IfUnlessModifier
+  def rate=(new_rate)
+    if rate != new_rate
+      rates << Rate.new(rate: new_rate)
+    end
+
+    super
+  end
+  # rubocop:enable Style/IfUnlessModifier
 
   def immediate_pickup?
     return false unless pickup_date && refreshed_at
@@ -82,7 +93,15 @@ class Load < ApplicationRecord
   end
 
   def rate_per_mile
-    (rate + distance / 2) / distance if distance.nonzero? && rate
+    calculate_rate_per_mile(rate)
+  end
+
+  def rates_per_mile
+    rates.filter_map { |r| calculate_rate_per_mile(r.rate) }
+  end
+
+  def calculate_rate_per_mile(the_rate)
+    (the_rate + distance / 2) / distance if distance.nonzero? && the_rate
   end
 
   # rubocop:disable Style/GuardClause

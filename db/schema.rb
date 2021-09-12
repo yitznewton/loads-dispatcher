@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_10_211116) do
+ActiveRecord::Schema.define(version: 2021_09_12_021639) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -126,6 +126,14 @@ ActiveRecord::Schema.define(version: 2021_09_10_211116) do
     t.index ["origin", "destination"], name: "index_places_distances_on_origin_and_destination", unique: true
   end
 
+  create_table "rates", force: :cascade do |t|
+    t.integer "rate"
+    t.integer "load_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["load_id"], name: "index_rates_on_load_id"
+  end
+
   create_table "raw_loads", force: :cascade do |t|
     t.json "data"
     t.integer "load_id", null: false
@@ -151,5 +159,6 @@ ActiveRecord::Schema.define(version: 2021_09_10_211116) do
   add_foreign_key "load_identifiers", "load_boards"
   add_foreign_key "loads", "broker_companies"
   add_foreign_key "loads", "load_identifiers", on_delete: :cascade
+  add_foreign_key "rates", "loads"
   add_foreign_key "raw_loads", "loads"
 end

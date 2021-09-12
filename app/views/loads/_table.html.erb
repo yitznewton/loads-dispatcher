@@ -37,8 +37,8 @@
             <%= l.equipment_type_code %>
           <% end %>
           <td><%= l.distance %> mi</td>
-          <td><%= currency(l.rate, show_cents: false) %></td>
-          <%= content_tag :td, currency(l.rate_per_mile), class: l.high_rate? && 'high-rate-load' %>
+          <td><%= all_rates(l) %></td>
+          <%= content_tag :td, all_rates_per_mile(l), class: l.high_rate? && 'high-rate-load' %>
           <td>
             <%= l.broker_company %>
             <%= link_to 'alias', new_broker_company_name_substitution_path(before: l.broker_company.name),

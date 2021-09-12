@@ -19,7 +19,7 @@
   <%= load_field @load, :length %>
   <%= load_field @load, @load.equipment_type && "#{@load.equipment_type_code} - #{@load.equipment_type}", 'Equipment' %>
   <%= load_field @load, "#{@load.distance} mi", 'Distance' %>
-  <%= load_field @load, currency(@load.rate, show_cents: false), 'Rate' %>
+  <%= load_field @load, all_rates(@load), 'Rate' %>
   <%= load_field @load, currency(@load.rate_per_mile), 'Rate per mile' %>
   <%= load_field @load, :notes %>
 
