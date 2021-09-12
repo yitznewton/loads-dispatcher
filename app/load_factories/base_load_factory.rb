@@ -38,6 +38,6 @@ class BaseLoadFactory
   end
 
   def load_attributes
-    parsed_attributes.merge(raw: load_data, refreshed_at: Time.current)
+    parsed_attributes.compact.merge(raw: load_data, refreshed_at: Time.current)
   end
 end
