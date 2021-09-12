@@ -39,6 +39,10 @@ class Place
     "#{city}, #{state}"
   end
 
+  def to_google
+    latitude && longitude ? "#{latitude},#{longitude}" : to_s
+  end
+
   private
 
   attr_reader :place_data
