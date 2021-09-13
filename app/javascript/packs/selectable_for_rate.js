@@ -1,21 +1,21 @@
 const setRate = (loadId, rate) => {
   const data = {
     load: {
-      rate: parseInt(rate.replace(/[^0-9.]/g, ''), 10) * 100
-    }
-  }
-
-  const headers = {
-    'Content-Type': 'application/json'
+      rate: parseInt(rate.replace(/[^0-9.]/g, ''), 10) * 100,
+    },
   };
 
-  fetch(`/loads/${loadId}.json`, { body: JSON.stringify(data), method: 'PATCH', headers: headers })
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  fetch(`/loads/${loadId}.json`, { body: JSON.stringify(data), method: 'PATCH', headers });
 };
 
-for (const element of document.getElementsByClassName('selectable-for-rate')) {
+Array.from(document.getElementsByClassName('selectable-for-rate')).forEach((element) => {
   let selectedText;
 
-  element.addEventListener('mouseup', function() {
+  element.addEventListener('mouseup', function () {
     const currentlySelectedText = window.getSelection().toString();
 
     if (selectedText !== currentlySelectedText) {
@@ -32,4 +32,4 @@ for (const element of document.getElementsByClassName('selectable-for-rate')) {
       }
     }
   });
-}
+});
