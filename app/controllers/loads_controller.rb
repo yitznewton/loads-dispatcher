@@ -114,7 +114,7 @@ class LoadsController < ApplicationController
   end
 
   def load_resources
-    @loads = Load.joins(:rates)
+    @loads = Load.left_outer_joins(:rates)
                  .includes(:broker_company)
                  .includes(:load_identifier)
                  .includes(:rates)
