@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root 'loads#index'
 
-  resources :loads, only: %i[index show destroy] do
+  resources :loads, only: %i[index show update destroy] do
     post :shortlist, on: :member
     post :unshortlist, on: :member
 

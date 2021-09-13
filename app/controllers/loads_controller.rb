@@ -1,7 +1,7 @@
 class LoadsController < ApplicationController
-  protect_from_forgery except: %i[destroy shortlist]
+  protect_from_forgery except: %i[update destroy shortlist]
   before_action :load_resources, only: %i[index shortlisted]
-  before_action :load_resource, only: %i[show destroy shortlist unshortlist]
+  before_action :load_resource, only: %i[show update destroy shortlist unshortlist]
   before_action :set_maps_from_session
 
   def index
@@ -33,6 +33,14 @@ class LoadsController < ApplicationController
   end
 
   def show
+  end
+
+  def update
+    if @load.update(load_params)
+      head :ok
+    else
+      head :bad_request
+    end
   end
 
   def destroy
@@ -99,6 +107,10 @@ class LoadsController < ApplicationController
   helper_method :shortlist?
 
   private
+
+  def load_params
+    params.require(:load).permit(:rate)
+  end
 
   def load_resources
     @loads = Load.includes(:broker_company).includes(:load_identifier).includes(:rates)
