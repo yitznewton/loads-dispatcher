@@ -22,10 +22,31 @@ describe 'Refreshes', type: :request do
         expect(response).to have_http_status(:accepted)
       end
 
-      it 'enqueues a combined refresh job' do
-        assert_enqueued_with(job: LoadsDataRefreshJob, args: [{truckers_edge_auth_token: 'ABC123'}]) do
-          post '/refresh.json', params: { truckers_edge_auth_token: 'ABC123' }
+      it 'enqueues new a combined refresh job' do # rubocop:disable RSpec/ExampleLength
+        allow(Delayed::Job).to receive(:enqueue).and_call_original
+
+        post '/refresh.json', params: { truckers_edge_auth_token: 'ABC123' }
+
+        expect(Delayed::Job).to have_received(:enqueue) do |job|
+          expect(job.truckers_edge_auth_token).to eq('ABC123')
         end
+
+        expect(Delayed::Job.where(queue: LoadsDataRefreshJob::QUEUE_NAME).count).to eq(1)
+      end
+
+      it 'clears any existing refresh job' do
+        post '/refresh.json', params: { truckers_edge_auth_token: 'ABC123' }
+        post '/refresh.json', params: { truckers_edge_auth_token: 'XYZ987' }
+
+        expect(Delayed::Job.where(queue: LoadsDataRefreshJob::QUEUE_NAME).count).to eq(1)
+      end
+
+      it 'does not affect jobs in other queues' do
+        '123'.delay(queue: :default).reverse
+
+        post '/refresh.json', params: { truckers_edge_auth_token: 'XYZ987' }
+
+        expect(Delayed::Job.where(queue: :default).count).to eq(1)
       end
     end
   end
