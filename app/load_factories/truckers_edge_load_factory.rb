@@ -19,7 +19,7 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
 
     [
       'company',     broker_company_identifier.id,
-      'pickup_time', load_data['pickupDate'],
+      'pickup_time', load_data['pickupDate'].to_date,
       'origin',      load_data['origin'],
       'destination', load_data['destination'],
       'weight',      load_data['weight']

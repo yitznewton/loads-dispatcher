@@ -53,7 +53,8 @@ describe TruckersEdgeLoadFactory do
 
       it 'uses company identifier, pickup time, pickup and dropoff locations, and weight' do
         second_load_data = complete_load_data.merge(
-          'matchId' => 'b'
+          'matchId' => 'b',
+          'pickupDate' => '2021-08-29T11:00:00.000Z' # same day
         )
 
         differentiating_load_data = [
@@ -63,7 +64,7 @@ describe TruckersEdgeLoadFactory do
           ),
           complete_load_data.merge(
             'matchId' => 'd',
-            'pickupDate' => '2021-08-29T12:00:00.000Z'
+            'pickupDate' => '2021-08-30T11:00:00.000Z'
           ),
           complete_load_data.merge(
             'matchId' => 'e',
