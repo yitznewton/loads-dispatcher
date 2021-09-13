@@ -17,7 +17,7 @@ module LoadsHelper
     load.rates_per_mile.map { |rate| currency(rate) }.uniq.join('-')
   end
 
-  def load_field(load, key, label = nil, &block)
+  def load_field(load, key, label = nil, **dd_opts, &block)
     value = if block.present?
               capture(&block)
             elsif key.is_a?(Symbol)
@@ -28,7 +28,7 @@ module LoadsHelper
 
     label = key.to_s.humanize if !label
 
-    tag.dt(label) + tag.dd(value)
+    tag.dt(label) + tag.dd(value, **dd_opts)
   end
 
   def broker_data(load)

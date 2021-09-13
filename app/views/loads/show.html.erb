@@ -21,7 +21,7 @@
   <%= load_field @load, "#{@load.distance} mi", 'Distance' %>
   <%= load_field @load, all_rates(@load), 'Rate' %>
   <%= load_field @load, all_rates_per_mile(@load), 'Rate per mile' %>
-  <%= load_field @load, :notes %>
+  <%= load_field @load, :notes, nil, class: 'selectable-for-rate', data: { load_id: @load.id } %>
 
   <%= content_tag :dt, 'Rates' %>
   <%= content_tag :dd do -%>
@@ -31,3 +31,4 @@
 </dl>
 
 <%= raw(ap(@load.raw, html: true)) %>
+<%= javascript_pack_tag 'selectable_for_rate.js' %>
