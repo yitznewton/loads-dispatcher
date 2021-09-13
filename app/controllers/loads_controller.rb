@@ -113,7 +113,10 @@ class LoadsController < ApplicationController
   end
 
   def load_resources
-    @loads = Load.includes(:broker_company).includes(:load_identifier).includes(:rates)
+    @loads = Load.joins(:rates)
+                 .includes(:broker_company)
+                 .includes(:load_identifier)
+                 .includes(:rates)
                  .order('loads.pickup_date, rates.id')
   end
 

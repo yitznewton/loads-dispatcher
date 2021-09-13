@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 describe 'Loads', type: :request do
+  it 'displays shortlist' do
+    get '/loads/shortlist'
+    expect(response).to have_http_status(:ok)
+  end
+
   describe 'clearing deleted from shortlist' do
     let!(:shortlisted_deleted_load) do
       create(:load, shortlisted_at: Time.current).tap do |l|
