@@ -10,11 +10,11 @@ module LoadsHelper
   end
 
   def all_rates(load)
-    load.rates.map { |rate| currency(rate.rate, show_cents: false) }.join('-')
+    load.rates.map { |rate| currency(rate.rate, show_cents: false) }.uniq.join('-')
   end
 
   def all_rates_per_mile(load)
-    load.rates_per_mile.map { |rate| currency(rate) }.join('-')
+    load.rates_per_mile.map { |rate| currency(rate) }.uniq.join('-')
   end
 
   def load_field(load, key, label = nil, &block)
