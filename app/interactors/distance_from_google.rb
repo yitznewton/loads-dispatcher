@@ -16,7 +16,12 @@ class DistanceFromGoogle
       (response_body['rows'].first['elements'].first['distance']['value'] * METERS_TO_MILES).to_i
     rescue NoMethodError
       Rails.logger.info(msg: 'Could not get distance from Google', origin: origin, destination: destination)
-      nil
+
+      # TODO
+      # this default of 0 is dodgy; it works because it fails validation, but
+      # it would probably be better to make this inherently a failure
+      # response
+      0
     end
   end
   # rubocop:enable Metrics/AbcSize,Metrics/MethodLength
