@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class LoadsController < ApplicationController
   protect_from_forgery except: %i[update destroy shortlist]
   before_action :load_resources, only: %i[index shortlisted]
@@ -128,3 +129,4 @@ class LoadsController < ApplicationController
     @hide_maps = session[:hide_maps]
   end
 end
+# rubocop:enable Metrics/ClassLength
