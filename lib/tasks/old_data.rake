@@ -11,6 +11,9 @@ namespace :old_data do
       Rate.where(load_id: loads).delete_all
       loads.delete_all
       LoadIdentifier.left_outer_joins(:load).where(load: { id: nil }).delete_all
+      PaperTrail::Version.joins('left outer join loads l on versions.item_id = l.id')
+                         .where(item_type: 'Load')
+                         .where('l.id is null').delete_all
     end
   end
 
