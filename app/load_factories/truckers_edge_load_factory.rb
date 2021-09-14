@@ -39,6 +39,7 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
       rate: load_data['rate']&.*(100)&.nonzero?&.to_i,
       contact_name: load_data['contactName']&.slice('first', 'last')&.values&.compact&.join(' '),
       contact_phone: phone(load_data['callback']),
+      contact_phone_extension: phone_extension(load_data['callback']),
       contact_email: email(load_data['callback']),
       reference_number: load_data['postersReferenceId'],
       pickup_location: load_data['origin'],
@@ -65,6 +66,10 @@ class TruckersEdgeLoadFactory < BaseLoadFactory
 
   def phone(callback)
     callback.fetch('phone') if callback.fetch('type') == CALLBACK_TYPE_PHONE
+  end
+
+  def phone_extension(callback)
+    callback['phoneExt']&.gsub(/[^0-9]/, '') if callback.fetch('type') == CALLBACK_TYPE_PHONE
   end
 
   def email(callback)
