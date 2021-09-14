@@ -14,9 +14,15 @@ class LoadsDataRefreshJob
 
   def perform
     CombinedRefresh.call(origin_date: Time.current, truckers_edge_auth_token: truckers_edge_auth_token)
+  end
+
+  def success
     requeue
-  rescue BadTqlResponse, BadTruckersEdgeResponse
-    # ignore and don't requeue
+    RefreshStatus.record(status: :success, time: Time.current)
+  end
+
+  def error(_job, exception)
+    RefreshStatus.record(status: :error, time: Time.current, error: exception)
   end
 
   def queue_name

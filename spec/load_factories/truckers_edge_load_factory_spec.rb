@@ -16,7 +16,6 @@ describe TruckersEdgeLoadFactory do
     described_class.call(complete_load_data)
   end
 
-  # rubocop:disable RSpec/ExampleLength
   describe 'unique identification' do
     context 'when a reference number is present' do
       let(:load_data) {{
@@ -88,7 +87,6 @@ describe TruckersEdgeLoadFactory do
       end
     end
   end
-  # rubocop:enable RSpec/ExampleLength
 
   describe 'distance' do
     context 'when given in surface miles' do
