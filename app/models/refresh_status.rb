@@ -2,7 +2,7 @@ class RefreshStatus
   KEY = :refresh_status
 
   def self.record(status:, time:, error: nil)
-    meta_attributes = { value: { status: status, time: time, error: error.to_s } }
+    meta_attributes = { value: { status: status, time: time, error: error.to_s.presence } }
 
     if (meta = Meta.find_by(key: KEY))
       meta.update!(meta_attributes)
