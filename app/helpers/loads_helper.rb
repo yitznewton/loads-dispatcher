@@ -45,9 +45,23 @@ module LoadsHelper
     date&.strftime(DATE_TEMPLATE)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def phone_link(load)
-    load.contact_phone && phone_to(load.contact_phone, number_to_phone(load.contact_phone))
+    return nil unless load.contact_phone
+
+    if load.contact_phone_extension
+      phone_to(
+        "#{load.contact_phone},,#{load.contact_phone_extension}",
+        "#{number_to_phone(load.contact_phone)} x#{load.contact_phone_extension}"
+      )
+    else
+      phone_to(
+        load.contact_phone,
+        number_to_phone(load.contact_phone)
+      )
+    end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def email_link(load)
     mail_to(load.contact_email, load.contact_email || 'compose email',

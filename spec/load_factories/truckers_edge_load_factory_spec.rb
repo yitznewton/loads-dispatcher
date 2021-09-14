@@ -130,10 +130,11 @@ describe TruckersEdgeLoadFactory do
   end
 
   describe 'contact phone' do
-    let(:load_data) {{ 'callback' => {'type' => 'Phone', 'phone' => '2125551212'} }}
+    let(:load_data) {{ 'callback' => {'type' => 'Phone', 'phone' => '2125551212', 'phoneExt' => 'x321'} }}
 
     it 'is extracted' do
       expect(load.contact_phone).to eq('2125551212')
+      expect(load.contact_phone_extension).to eq('321')
     end
   end
 
