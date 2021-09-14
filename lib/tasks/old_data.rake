@@ -13,7 +13,7 @@ namespace :old_data do
       LoadIdentifier.left_outer_joins(:load).where(load: { id: nil }).delete_all
       PaperTrail::Version.joins('left outer join loads l on versions.item_id = l.id')
                          .where(item_type: 'Load')
-                         .where('l.id is null').delete_all
+                         .where(l: { id: nil }).delete_all
     end
   end
 
