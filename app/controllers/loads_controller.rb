@@ -78,12 +78,12 @@ class LoadsController < ApplicationController
   end
 
   def show_maps
-    @hide_maps = session[:hide_maps] = false
+    @show_maps = session[:show_maps] = true
     redirect_back(fallback_location: loads_path)
   end
 
   def hide_maps
-    @hide_maps = session[:hide_maps] = true
+    @show_maps = session[:show_maps] = false
     redirect_back(fallback_location: loads_path)
   end
 
@@ -125,7 +125,7 @@ class LoadsController < ApplicationController
   end
 
   def set_maps_from_session
-    @hide_maps = session[:hide_maps]
+    @show_maps = session[:show_maps]
   end
 end
 # rubocop:enable Metrics/ClassLength
