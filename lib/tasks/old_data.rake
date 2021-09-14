@@ -10,7 +10,7 @@ namespace :old_data do
       loads = Load.where(shortlisted_at: nil).where('updated_at < ?', Time.current - 18.hours)
       Rate.where(load_id: loads).delete_all
       loads.delete_all
-      LoadIdentifier.left_outer_joins(:load).where(load: { id: nil })
+      LoadIdentifier.left_outer_joins(:load).where(load: { id: nil }).delete_all
     end
   end
 
