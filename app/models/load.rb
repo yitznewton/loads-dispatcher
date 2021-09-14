@@ -13,7 +13,7 @@ class Load < ApplicationRecord
     drop_trailer: 'droptrailer'
   }.freeze
 
-  has_many :rates, -> { order(:id) }, dependent: :delete_all # rubocop:disable Rails/HasManyOrHasOneDependent,Rails/InverseOf
+  has_many :rates, -> { order(:id) }, dependent: :delete_all # rubocop:disable Rails/InverseOf
   belongs_to :broker_company
   belongs_to :load_identifier
 
@@ -101,7 +101,7 @@ class Load < ApplicationRecord
   end
 
   def calculate_rate_per_mile(the_rate)
-    (the_rate + distance / 2) / distance if distance.nonzero? && the_rate
+    (the_rate + (distance / 2)) / distance if distance.nonzero? && the_rate
   end
 
   # rubocop:disable Style/GuardClause
