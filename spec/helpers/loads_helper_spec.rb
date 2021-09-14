@@ -1,15 +1,45 @@
 require 'rails_helper'
 
-# Specs in this file have access to a helper object that includes
-# the LoadsHelper. For example:
-#
-# describe LoadsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
-RSpec.describe LoadsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe LoadsHelper, type: :helper do
+  describe 'phone link' do
+    context 'without phone' do
+      let(:load) { FactoryBot.build(:load, contact_phone: nil) }
+
+      it 'is nil' do
+        expect(helper.phone_link(load)).to be_nil
+      end
+    end
+
+    context 'without extension' do
+      let(:load) { FactoryBot.build(:load, contact_phone_extension: nil) }
+
+      it 'has correct number' do
+        html = helper.phone_link(load)
+        node = Nokogiri::HTML(html)
+        expect(node.css('a')[0]['href']).to eq('tel:2125551212')
+      end
+
+      it 'displays correctly' do
+        html = helper.phone_link(load)
+        node = Nokogiri::HTML(html)
+        expect(node.css('a')[0].text).to eq('212-555-1212')
+      end
+    end
+
+    context 'with extension' do
+      let(:load) { FactoryBot.build(:load, contact_phone_extension: '321') }
+
+      it 'has correct number' do
+        html = helper.phone_link(load)
+        node = Nokogiri::HTML(html)
+        expect(node.css('a')[0]['href']).to eq('tel:2125551212%2C%2C321')
+      end
+
+      it 'displays correctly' do
+        html = helper.phone_link(load)
+        node = Nokogiri::HTML(html)
+        expect(node.css('a')[0].text).to eq('212-555-1212 x321')
+      end
+    end
+  end
 end

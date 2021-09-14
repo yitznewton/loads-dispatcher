@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_12_021639) do
+ActiveRecord::Schema.define(version: 2021_09_14_005248) do
 
   create_table "broker_companies", force: :cascade do |t|
     t.string "name"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 2021_09_12_021639) do
     t.string "dropoff_details"
     t.datetime "shortlisted_at"
     t.datetime "refreshed_at"
+    t.string "contact_phone_extension"
     t.index ["broker_company_id"], name: "index_loads_on_broker_company_id"
     t.index ["load_identifier_id"], name: "index_loads_on_load_identifier_id"
   end
