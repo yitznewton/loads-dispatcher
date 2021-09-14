@@ -22,7 +22,7 @@ describe 'Refreshes', type: :request do
         expect(response).to have_http_status(:accepted)
       end
 
-      it 'enqueues new a combined refresh job' do # rubocop:disable RSpec/ExampleLength
+      it 'enqueues new a combined refresh job' do
         allow(Delayed::Job).to receive(:enqueue).and_call_original
 
         post '/refresh.json', params: { truckers_edge_auth_token: 'ABC123' }

@@ -31,6 +31,9 @@ Rails/Blank:
 Rails/Delegate:
   Enabled: false
 
+RSpec/ExampleLength:
+  Enabled: false
+
 RSpec/ExpectChange:
   EnforcedStyle: block
 
