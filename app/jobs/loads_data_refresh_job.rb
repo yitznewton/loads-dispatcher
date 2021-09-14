@@ -29,6 +29,10 @@ class LoadsDataRefreshJob
     QUEUE_NAME
   end
 
+  def max_attempts
+    1
+  end
+
   def self.cancel_existing
     Delayed::Job.where(queue: QUEUE_NAME).delete_all
   end

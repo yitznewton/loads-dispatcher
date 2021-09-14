@@ -14,6 +14,13 @@
   <nav><%= link_to 'Shortlist', shortlist_loads_path %> | <%= link_to 'Refresh data', refresh_path %></nav>
 <% end %>
 
+<% if @refresh_status %>
+  <p>
+    Last update: <span title="<%= @refresh_status.error %>">
+    <%= @refresh_status.status %></span> on <%= @refresh_status.time.strftime('%A, %b %d @ %H:%M') %>
+  </p>
+<% end %>
+
 <%= render 'table' %>
 <%= render 'map_toggle_button' %>
 <%= render 'map' unless @hide_maps %>
