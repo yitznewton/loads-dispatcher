@@ -1,8 +1,6 @@
 <% content_for(:page_title, "Load: #{@load.pickup_location} to #{@load.dropoff_location}") %>
 
-<%= load_map(@load) unless @hide_maps %>
-
-<div class="show-load-map-toggle-button"><%= render 'map_toggle_button' %></div>
+<%= load_map(@load) %>
 
 <p><%= link_to 'Back to loads', loads_path %></p>
 
