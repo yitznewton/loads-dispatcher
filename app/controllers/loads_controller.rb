@@ -2,6 +2,7 @@
 class LoadsController < ApplicationController
   protect_from_forgery except: %i[update destroy shortlist]
   before_action :load_resources, only: %i[index shortlisted]
+  before_action :load_refresh_status, only: %i[index shortlisted]
   before_action :load_resource, only: %i[show update destroy shortlist unshortlist]
   before_action :set_maps_from_session
 
@@ -122,6 +123,10 @@ class LoadsController < ApplicationController
 
   def load_resource
     @load = Load.find(params[:id])
+  end
+
+  def load_refresh_status
+    @refresh_status = RefreshStatus.current
   end
 
   def set_maps_from_session
