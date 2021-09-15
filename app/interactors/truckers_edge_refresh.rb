@@ -45,11 +45,15 @@ class TruckersEdgeRefresh < BaseRefresh
   end
 
   def response_body(origin_city:, destination_city:)
-    JSON.parse(Faraday.post(
+    body = Faraday.post(
       URL,
       request_payload(pickup_location: origin_city, dropoff_location: destination_city),
       BASE_REQUEST_HEADERS.merge('Authorization' => "Bearer #{auth_token}")
-    ).body)
+    ).body
+
+    JSON.parse(body)
+  rescue JSON::ParserError
+    raise response_exception_klass, "JSON parse error when parsing response: '#{body}'"
   end
 
   # rubocop:todo Metrics/MethodLength
