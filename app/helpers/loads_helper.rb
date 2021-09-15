@@ -108,6 +108,14 @@ module LoadsHelper
                     src: raw(url)) # rubocop:todo Rails/OutputSafety
   end
 
+  def dismiss_button(load, **kwargs)
+    button_to 'Dismiss load', load,
+              method: :delete,
+              class: 'dismiss-button',
+              form_class: 'dismiss-button-form',
+              **kwargs
+  end
+
   def shortlist_button(load)
     button_to 'Shortlist', shortlist_load_path(load),
               class: 'shortlist-button',
