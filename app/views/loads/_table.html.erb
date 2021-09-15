@@ -22,8 +22,7 @@
       <% @loads.each do |l| %>
         <%= content_tag :tr, id: "load_#{l.id}", class: ('deleted' if l.deleted?) do -%>
           <td nowrap>
-            <%= button_to 'Dismiss', l, method: :delete, class: 'dismiss-button', form_class: 'dismiss-button-form', remote: true,
-                            form: { data: { load_id: l.id } } %>
+            <%= dismiss_button(l, remote: true, form: { data: { load_id: l.id } }) %>
             <%= shortlist_button(l) %>
             <%= unshortlist_button(l) %>
           </td>
@@ -53,4 +52,5 @@
 <% end %>
 
 <%= javascript_pack_tag 'loads_table.js' %>
+<%= javascript_pack_tag 'shortlist_buttons.js' %>
 <%= javascript_pack_tag 'selectable_for_rate.js' %>

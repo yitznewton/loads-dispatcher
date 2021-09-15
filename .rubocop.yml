@@ -23,6 +23,10 @@ Metrics/BlockLength:
     - lib/tasks/**/*.rake
     - spec/**/*_spec.rb
 
+Metrics/ModuleLength:
+  Exclude:
+    - app/helpers/**/*.rb
+
 Naming/HeredocDelimiterNaming:
   Enabled: false
 

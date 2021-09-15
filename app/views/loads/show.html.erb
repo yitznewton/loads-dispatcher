@@ -4,7 +4,11 @@
 
 <p><%= link_to 'Back to loads', loads_path %></p>
 
-<%= button_to 'Dismiss load', @load, method: :delete %>
+<div>
+  <%= dismiss_button(@load) %>
+  <%= shortlist_button(@load) %>
+  <%= unshortlist_button(@load) %>
+</div>
 
 <dl>
   <%= load_field @load, "#{@load.pickup_date&.strftime('%a %-m/%-d %H:%M')} - #{@load.pickup_location}", 'Pickup' %>
@@ -29,4 +33,5 @@
 </dl>
 
 <%= raw(ap(@load.raw, html: true)) %>
+<%= javascript_pack_tag 'shortlist_buttons.js' %>
 <%= javascript_pack_tag 'selectable_for_rate.js' %>
