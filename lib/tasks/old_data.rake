@@ -24,4 +24,20 @@ namespace :old_data do
       Load.delete_all
     end
   end
+
+  desc 'Remove versions that only change values from nil'
+  task prune_nil_change_versions: :environment do
+    versions_with_changes = PaperTrail::Version.where(item_type: 'Load')
+                                               .where(event: 'update')
+                                               .where('object_changes like ?', "%\n- \n%")
+                                               .pluck(:id, :object_changes)
+
+    versions_with_changes.each do |(id, oc)|
+      object_changes = YAML.safe_load(oc)
+
+      if object_changes.values.all? { |change| change.length == 2 && change[0].nil? }
+        PaperTrail::Version.where(id: id).delete_all
+      end
+    end
+  end
 end
