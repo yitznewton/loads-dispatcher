@@ -33,7 +33,11 @@ namespace :old_data do
                                                .pluck(:id, :object_changes)
 
     versions_with_changes.each do |(id, oc)|
-      object_changes = YAML.safe_load(oc)
+      begin
+        object_changes = YAML.safe_load(oc)
+      rescue Psych::DisallowedClass
+        next
+      end
 
       if object_changes.values.all? { |change| change.length == 2 && change[0].nil? }
         PaperTrail::Version.where(id: id).delete_all
