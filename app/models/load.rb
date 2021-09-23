@@ -17,7 +17,7 @@ class Load < ApplicationRecord
   belongs_to :broker_company
   belongs_to :load_identifier
 
-  has_paper_trail only: %i[notes weight reference_number broker_company_id
+  has_paper_trail only: %i[weight reference_number broker_company_id
                            distance pickup_location dropoff_location]
 
   validates :weight, presence: true, numericality: { greater_than: 0 }
